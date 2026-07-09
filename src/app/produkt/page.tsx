@@ -18,9 +18,9 @@ import {
 } from "@/components/icons";
 
 export const metadata: Metadata = {
-  title: "Produkt – Wie WissensKern Ihre lokale Unternehmens-KI aufbaut",
+  title: "Produkt – Wie OnLumis Ihre lokale Unternehmens-KI aufbaut",
   description:
-    "Architektur, Datenintegration, KI-Modelle, Sicherheit und Betrieb von WissensKern im Detail: So entsteht aus Ihrem Unternehmenswissen eine On-Premise-KI ohne Cloud-Zwang.",
+    "Architektur, Datenintegration, KI-Modelle, Sicherheit und Betrieb von OnLumis im Detail: So entsteht aus Ihrem Unternehmenswissen eine On-Premise-KI ohne Cloud-Zwang.",
   alternates: { canonical: "/produkt" },
 };
 
@@ -43,7 +43,7 @@ const architectureLayers = [
   {
     icon: <IconPlug />,
     title: "Zugriffsschicht",
-    text: "Chat-Oberfläche, interne Suche, Microsoft-Teams-Anbindung oder eigene API – Ihre Teams greifen dort auf WissensKern zu, wo sie ohnehin arbeiten.",
+    text: "Chat-Oberfläche, interne Suche, Microsoft-Teams-Anbindung oder eigene API – Ihre Teams greifen dort auf OnLumis zu, wo sie ohnehin arbeiten.",
   },
 ];
 
@@ -83,11 +83,11 @@ const security = [
 const deploymentOptions = [
   {
     title: "On-Premise im eigenen Haus",
-    text: "WissensKern läuft auf einem Server in Ihrem eigenen Serverraum oder Rechenzentrum. Maximale Kontrolle, keine Abhängigkeit von externen Anbietern.",
+    text: "OnLumis läuft auf einem Server in Ihrem eigenen Serverraum oder Rechenzentrum. Maximale Kontrolle, keine Abhängigkeit von externen Anbietern.",
   },
   {
     title: "Exklusive Private Cloud in Deutschland/EU",
-    text: "Für Unternehmen ohne eigene Serverinfrastruktur betreiben wir WissensKern in einem zertifizierten deutschen oder europäischen Rechenzentrum – exklusiv für Sie, nicht als geteilter Cloud-Dienst.",
+    text: "Für Unternehmen ohne eigene Serverinfrastruktur betreiben wir OnLumis in einem zertifizierten deutschen oder europäischen Rechenzentrum – exklusiv für Sie, nicht als geteilter Cloud-Dienst.",
   },
   {
     title: "Hybrid",
@@ -110,11 +110,11 @@ const onboarding = [
   },
   {
     title: "Pilotphase mit ausgewähltem Team",
-    text: "Eine Pilotgruppe testet WissensKern im Alltag. Feedback fließt direkt in Feinjustierung von Antwortqualität und Berechtigungen ein.",
+    text: "Eine Pilotgruppe testet OnLumis im Alltag. Feedback fließt direkt in Feinjustierung von Antwortqualität und Berechtigungen ein.",
   },
   {
     title: "Go-Live & unternehmensweiter Rollout",
-    text: "Nach erfolgreicher Pilotphase wird WissensKern für weitere Teams freigeschaltet – schrittweise oder unternehmensweit.",
+    text: "Nach erfolgreicher Pilotphase wird OnLumis für weitere Teams freigeschaltet – schrittweise oder unternehmensweit.",
   },
   {
     title: "Laufender Betrieb & Pflege",
@@ -127,26 +127,26 @@ export default function ProduktPage() {
     <>
       <PageHero
         eyebrow="Das Produkt"
-        title="WissensKern: Eine KI, die ausschließlich mit Ihrem Wissen arbeitet"
-        description="WissensKern verbindet ein leistungsfähiges, lokal betriebenes Sprachmodell mit den Dokumenten, Prozessen und dem Erfahrungswissen Ihres Unternehmens – installiert und betrieben dort, wo Ihre Daten hingehören: bei Ihnen."
+        title="OnLumis: Eine KI, die ausschließlich mit Ihrem Wissen arbeitet"
+        description="OnLumis verbindet ein leistungsfähiges, lokal betriebenes Sprachmodell mit den Dokumenten, Prozessen und dem Erfahrungswissen Ihres Unternehmens – installiert und betrieben dort, wo Ihre Daten hingehören: bei Ihnen."
       >
         <CtaButton href="/kontakt">Persönliche Beratung anfragen</CtaButton>
       </PageHero>
 
       <section className="py-20 sm:py-28">
         <Container className="max-w-3xl">
-          <SectionHeading align="left" eyebrow="Überblick" title="Was WissensKern konkret leistet" />
+          <SectionHeading align="left" eyebrow="Überblick" title="Was OnLumis konkret leistet" />
           <div className="prose-content mt-8 space-y-5 text-muted">
             <p>
               Große Sprachmodelle wie sie aus öffentlichen Cloud-Diensten bekannt sind, kennen
-              „die Welt&quot; – aber nicht Ihr Unternehmen. WissensKern schließt genau diese Lücke:
+              „die Welt&quot; – aber nicht Ihr Unternehmen. OnLumis schließt genau diese Lücke:
               Statt auf allgemeinem Internet-Wissen zu basieren, wird ein leistungsfähiges
               KI-Modell mit den tatsächlichen Inhalten Ihres Unternehmens verbunden – Ihren
               Handbüchern, Richtlinien, Verträgen, Produktinformationen, internen Wikis und
               Erfahrungswerten.
             </p>
             <p>
-              Technisch nutzt WissensKern dafür ein Verfahren namens{" "}
+              Technisch nutzt OnLumis dafür ein Verfahren namens{" "}
               <strong>Retrieval-Augmented Generation (RAG)</strong>: Ihre Dokumente werden in
               durchsuchbare Wissenseinheiten zerlegt und in einer lokalen Vektordatenbank
               abgelegt. Stellt ein Mitarbeitender eine Frage, sucht das System zunächst die
@@ -168,7 +168,7 @@ export default function ProduktPage() {
         <Container>
           <SectionHeading
             eyebrow="Architektur"
-            title="So ist WissensKern aufgebaut"
+            title="So ist OnLumis aufgebaut"
             description="Vier zusammenspielende Ebenen sorgen dafür, dass aus Ihren Rohdaten verlässliches, abrufbares Unternehmenswissen wird."
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -184,7 +184,7 @@ export default function ProduktPage() {
       <section className="py-20 sm:py-28">
         <Container className="grid gap-12 lg:grid-cols-2 lg:items-start">
           <div>
-            <SectionHeading align="left" eyebrow="Datenintegration" title="Welche Wissensquellen WissensKern einbindet" />
+            <SectionHeading align="left" eyebrow="Datenintegration" title="Welche Wissensquellen OnLumis einbindet" />
             <ul className="mt-8 space-y-3">
               {dataSources.map((source) => (
                 <li key={source} className="flex items-start gap-3 text-sm text-muted">
@@ -199,7 +199,7 @@ export default function ProduktPage() {
               KI-Modelle & Technologie
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-muted">
-              WissensKern setzt auf ausgewählte, quelloffene Sprachmodelle (z. B. aus den
+              OnLumis setzt auf ausgewählte, quelloffene Sprachmodelle (z. B. aus den
               Modellfamilien Llama, Mistral oder vergleichbare, für den deutschsprachigen Einsatz
               geeignete Modelle), die vollständig lokal betrieben werden. Es besteht keine
               Abhängigkeit von einer laufenden Verbindung zu OpenAI, Microsoft, Google oder
@@ -220,7 +220,7 @@ export default function ProduktPage() {
           <SectionHeading
             eyebrow="Sicherheit"
             title="Sicherheits- und Zugriffskonzept"
-            description="WissensKern ist für den Einsatz in schutzbedürftigen Unternehmensumgebungen konzipiert."
+            description="OnLumis ist für den Einsatz in schutzbedürftigen Unternehmensumgebungen konzipiert."
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {security.map((item) => (
@@ -234,7 +234,7 @@ export default function ProduktPage() {
 
       <section className="py-20 sm:py-28">
         <Container>
-          <SectionHeading eyebrow="Betriebsmodelle" title="Wie und wo WissensKern betrieben wird" />
+          <SectionHeading eyebrow="Betriebsmodelle" title="Wie und wo OnLumis betrieben wird" />
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
             {deploymentOptions.map((option) => (
               <div key={option.title} className="rounded-2xl border border-border bg-surface p-6">

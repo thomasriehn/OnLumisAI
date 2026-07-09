@@ -12,7 +12,7 @@ export function Footer() {
             <Logo />
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/70">
-            {siteConfig.tagline} WissensKern wird entwickelt und betrieben von der{" "}
+            {siteConfig.tagline} OnLumis wird entwickelt und betrieben von der{" "}
             <a
               href={siteConfig.company.url}
               className="underline decoration-white/30 underline-offset-2 hover:text-white"

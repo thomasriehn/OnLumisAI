@@ -1,13 +1,13 @@
 [Unit]
-Description=WissensKern Website (Next.js)
+Description=OnLumis Website (Next.js)
 After=network.target
 
 [Service]
 Type=simple
-User=wissenskern
-Group=wissenskern
-WorkingDirectory=/var/www/wissenskern
-EnvironmentFile=/var/www/wissenskern/.env.local
+User=onlumis
+Group=onlumis
+WorkingDirectory=/var/www/onlumis
+EnvironmentFile=/var/www/onlumis/.env.local
 Environment=PORT=3000
 ExecStart=/usr/bin/npm run start
 Restart=on-failure

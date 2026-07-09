@@ -6,9 +6,9 @@ import { IconCheckCircle } from "@/components/icons";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Kontakt – Unverbindliches Erstgespräch zu WissensKern",
+  title: "Kontakt – Unverbindliches Erstgespräch zu OnLumis",
   description:
-    "Nehmen Sie Kontakt zu JULITH GmbH auf und erfahren Sie, wie WissensKern als lokale, DSGVO-konforme KI-Lösung in Ihrem Unternehmen eingeführt werden kann.",
+    "Nehmen Sie Kontakt zu JULITH GmbH auf und erfahren Sie, wie OnLumis als lokale, DSGVO-konforme KI-Lösung in Ihrem Unternehmen eingeführt werden kann.",
   alternates: { canonical: "/kontakt" },
 };
 
@@ -25,7 +25,7 @@ export default function KontaktPage() {
       <PageHero
         eyebrow="Kontakt"
         title="Lassen Sie uns über Ihre Unternehmens-KI sprechen"
-        description="Egal ob Sie schon eine konkrete Vorstellung haben oder WissensKern erst kennenlernen möchten – wir freuen uns auf Ihre Nachricht."
+        description="Egal ob Sie schon eine konkrete Vorstellung haben oder OnLumis erst kennenlernen möchten – wir freuen uns auf Ihre Nachricht."
       />
 
       <section className="py-20 sm:py-28">

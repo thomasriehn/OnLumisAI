@@ -1,8 +1,8 @@
-# WissensKern
+# OnLumis
 
-Marketing-Website für **WissensKern** – die lokale, DSGVO-konforme
+Marketing-Website für **OnLumis** – die lokale, DSGVO-konforme
 Unternehmens-KI der [JULITH GmbH](https://julith.gmbh). Produktiv unter
-[wissenskern.ai](https://wissenskern.ai).
+[onlumis.ai](https://onlumis.ai).
 
 Gebaut mit Next.js (App Router) + TypeScript + Tailwind CSS. Statisch
 generierte Seiten für Produkt, Vorteile, Anwendungsfälle, Förderung,
@@ -48,8 +48,8 @@ cp .env.example .env.local
 | `SMTP_SECURE`  | `"true"` für implizites TLS (z. B. Port 465), sonst `"false"`                 | `false` |
 | `SMTP_USER`    | Optional: Benutzername, falls der Server/Postfix-Relay Auth verlangt          | leer |
 | `SMTP_PASS`    | Optional: Passwort, falls der Server/Postfix-Relay Auth verlangt              | leer |
-| `MAIL_FROM`    | Absenderadresse der versendeten Mails                                        | `WissensKern Website <no-reply@wissenskern.ai>` |
-| `MAIL_TO`      | Empfängeradresse für eingehende Kontaktanfragen                              | `info@wissenskern.ai` |
+| `MAIL_FROM`    | Absenderadresse der versendeten Mails                                        | `OnLumis Website <no-reply@onlumis.ai>` |
+| `MAIL_TO`      | Empfängeradresse für eingehende Kontaktanfragen                              | `info@onlumis.ai` |
 
 `.env*`-Dateien sind über `.gitignore` von der Versionskontrolle
 ausgeschlossen – Zugangsdaten landen also nicht im Repository.
@@ -72,7 +72,7 @@ weiterleiten können. Minimalanforderungen an die Postfix-Konfiguration
 (`/etc/postfix/main.cf`):
 
 ```
-myhostname = mail.wissenskern.ai
+myhostname = mail.onlumis.ai
 myorigin = $myhostname
 inet_interfaces = loopback-only   # Postfix lauscht nur lokal, kein offenes Relay
 mydestination =

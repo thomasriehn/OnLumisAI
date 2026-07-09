@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "Vorteile – Was eine lokale KI Ihrem Unternehmen bringt",
   description:
-    "Datenschutz, Wirtschaftlichkeit und Wettbewerbsfähigkeit im Vergleich: die konkreten Vorteile einer On-Premise-KI mit WissensKern gegenüber klassischen Cloud-KI-Diensten.",
+    "Datenschutz, Wirtschaftlichkeit und Wettbewerbsfähigkeit im Vergleich: die konkreten Vorteile einer On-Premise-KI mit OnLumis gegenüber klassischen Cloud-KI-Diensten.",
   alternates: { canonical: "/vorteile" },
 };
 
@@ -112,7 +112,7 @@ export default function VorteilePage() {
       <PageHero
         eyebrow="Vorteile"
         title="Warum sich eine lokale Unternehmens-KI für Sie auszahlt"
-        description="WissensKern verbindet die Leistungsfähigkeit moderner KI mit den Anforderungen an Datenschutz, Kostenkontrolle und Unabhängigkeit, die für den deutschen Mittelstand zählen."
+        description="OnLumis verbindet die Leistungsfähigkeit moderner KI mit den Anforderungen an Datenschutz, Kostenkontrolle und Unabhängigkeit, die für den deutschen Mittelstand zählen."
       >
         <CtaButton href="/kontakt">Individuelles Nutzenpotenzial ermitteln</CtaButton>
       </PageHero>
@@ -121,7 +121,7 @@ export default function VorteilePage() {
         <Container>
           <SectionHeading
             eyebrow="Im Vergleich"
-            title="WissensKern vs. klassische Cloud-KI"
+            title="OnLumis vs. klassische Cloud-KI"
             description="Ein direkter Blick auf die wichtigsten Unterschiede."
           />
           <div className="mt-12 overflow-x-auto rounded-2xl border border-border">
@@ -130,7 +130,7 @@ export default function VorteilePage() {
                 <tr className="bg-surface-alt">
                   <th className="p-4 font-semibold text-ink dark:text-white">Kriterium</th>
                   <th className="p-4 font-semibold text-ink dark:text-white">Klassische Cloud-KI</th>
-                  <th className="p-4 font-semibold text-accent-strong">WissensKern (On-Premise)</th>
+                  <th className="p-4 font-semibold text-accent-strong">OnLumis (On-Premise)</th>
                 </tr>
               </thead>
               <tbody>
@@ -182,7 +182,7 @@ export default function VorteilePage() {
 
       <section className="py-20 sm:py-28">
         <Container>
-          <SectionHeading eyebrow="Für wen geeignet" title="WissensKern passt zu Unternehmen, die..." />
+          <SectionHeading eyebrow="Für wen geeignet" title="OnLumis passt zu Unternehmen, die..." />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <FeatureCard icon={<IconDatabase />} title="viel wertvolles Wissen besitzen">
               Handbücher, Richtlinien, Verträge oder Erfahrungswissen sind vorhanden, aber schwer
@@ -207,7 +207,7 @@ export default function VorteilePage() {
           </h2>
           <p className="max-w-xl text-white/75">
             In einem kostenlosen Erstgespräch schauen wir gemeinsam auf Ihre Ausgangslage und
-            zeigen auf, welchen Mehrwert WissensKern für Ihr Unternehmen konkret bietet.
+            zeigen auf, welchen Mehrwert OnLumis für Ihr Unternehmen konkret bietet.
           </p>
           <CtaButton href="/kontakt">
             Erstgespräch vereinbaren <IconArrowRight />

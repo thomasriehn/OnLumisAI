@@ -8,13 +8,13 @@ import { IconCheckCircle, IconArrowRight, IconEuro } from "@/components/icons";
 export const metadata: Metadata = {
   title: "Förderung – Digitalbonus Hessen & Co. für Ihre KI-Investition nutzen",
   description:
-    "Wie Sie WissensKern über Digitalisierungsförderprogramme wie den Digitalbonus Hessen bezuschussen lassen können – inklusive Unterstützung bei der Antragstellung durch JULITH GmbH.",
+    "Wie Sie OnLumis über Digitalisierungsförderprogramme wie den Digitalbonus Hessen bezuschussen lassen können – inklusive Unterstützung bei der Antragstellung durch JULITH GmbH.",
   alternates: { canonical: "/foerderung" },
 };
 
 const eligibleCosts = [
   "Beratungsleistungen zur Analyse und Konzeption Ihrer Wissens-KI",
-  "Implementierung, Einrichtung und Konfiguration von WissensKern",
+  "Implementierung, Einrichtung und Konfiguration von OnLumis",
   "Einbettung und Aufbereitung Ihrer Unternehmensdaten (Embedding-Prozess)",
   "Schulung und Einweisung Ihrer Mitarbeitenden",
   "In vielen Programmen anteilig: benötigte Hardware/Infrastruktur",
@@ -38,7 +38,7 @@ const otherPrograms = [
 const steps = [
   {
     title: "Kostenlose Ersteinschätzung",
-    text: "Wir prüfen gemeinsam mit Ihnen, ob und über welches Programm Ihr WissensKern-Projekt grundsätzlich förderfähig sein könnte.",
+    text: "Wir prüfen gemeinsam mit Ihnen, ob und über welches Programm Ihr OnLumis-Projekt grundsätzlich förderfähig sein könnte.",
   },
   {
     title: "Angebot & Projektbeschreibung",
@@ -50,7 +50,7 @@ const steps = [
   },
   {
     title: "Umsetzung & Verwendungsnachweis",
-    text: "Nach Bewilligung setzen wir Ihr WissensKern-Projekt um und unterstützen Sie bei der Dokumentation für den Verwendungsnachweis.",
+    text: "Nach Bewilligung setzen wir Ihr OnLumis-Projekt um und unterstützen Sie bei der Dokumentation für den Verwendungsnachweis.",
   },
 ];
 
@@ -59,7 +59,7 @@ export default function FoerderungPage() {
     <>
       <PageHero
         eyebrow="Förderung"
-        title="Ihre WissensKern-Investition öffentlich fördern lassen"
+        title="Ihre OnLumis-Investition öffentlich fördern lassen"
         description="Digitalisierungsförderprogramme der Bundesländer und des Bundes unterstützen kleine und mittlere Unternehmen gezielt bei Investitionen in digitale Technologien – dazu zählt auch der Aufbau einer eigenen, lokalen Unternehmens-KI."
       >
         <CtaButton href="/kontakt">Förderfähigkeit unverbindlich prüfen lassen</CtaButton>
@@ -74,7 +74,7 @@ export default function FoerderungPage() {
               das über die Wirtschafts- und Infrastrukturbank Hessen (WIBank) kleine und mittlere
               Unternehmen bei Investitionen in die digitale Transformation unterstützt. Gefördert
               werden typischerweise Beratungs- und Umsetzungsleistungen für digitale Vorhaben –
-              der Aufbau einer lokal betriebenen KI-Lösung wie WissensKern kann grundsätzlich in
+              der Aufbau einer lokal betriebenen KI-Lösung wie OnLumis kann grundsätzlich in
               den Anwendungsbereich solcher Digitalisierungsprojekte fallen.
             </p>
             <p>
@@ -94,7 +94,7 @@ export default function FoerderungPage() {
             <SectionHeading
               align="left"
               eyebrow="Förderfähige Kosten"
-              title="Was im Rahmen von WissensKern typischerweise förderfähig sein kann"
+              title="Was im Rahmen von OnLumis typischerweise förderfähig sein kann"
             />
             <ul className="mt-8 space-y-3">
               {eligibleCosts.map((cost) => (
@@ -171,7 +171,7 @@ export default function FoerderungPage() {
           </h2>
           <p className="max-w-xl text-white/75">
             Nennen Sie uns Ihren Unternehmenssitz und Ihr Vorhaben – wir sagen Ihnen, welche
-            Förderprogramme für Ihre WissensKern-Einführung infrage kommen können.
+            Förderprogramme für Ihre OnLumis-Einführung infrage kommen können.
           </p>
           <CtaButton href="/kontakt">
             Jetzt anfragen <IconArrowRight />

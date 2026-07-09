@@ -22,7 +22,7 @@ import {
 export const metadata: Metadata = {
   title: "Lokale KI für Ihr Unternehmen – DSGVO-konform & On-Premise",
   description:
-    "WissensKern bettet das Wissen Ihres Unternehmens in ein lokal betriebenes KI-System ein. DSGVO-konform, ohne Cloud-Zwang, förderfähig – entwickelt von der JULITH GmbH für den deutschen Mittelstand.",
+    "OnLumis bettet das Wissen Ihres Unternehmens in ein lokal betriebenes KI-System ein. DSGVO-konform, ohne Cloud-Zwang, förderfähig – entwickelt von der JULITH GmbH für den deutschen Mittelstand.",
   alternates: { canonical: "/" },
 };
 
@@ -38,7 +38,7 @@ const process = [
     step: "01",
     title: "Analyse & Zielbild",
     description:
-      "Gemeinsam analysieren wir Ihre Wissensquellen – von Dateiservern über DMS bis Ticketsysteme – und definieren, welche Fragen WissensKern für welche Teams beantworten soll.",
+      "Gemeinsam analysieren wir Ihre Wissensquellen – von Dateiservern über DMS bis Ticketsysteme – und definieren, welche Fragen OnLumis für welche Teams beantworten soll.",
   },
   {
     step: "02",
@@ -50,7 +50,7 @@ const process = [
     step: "03",
     title: "Installation vor Ort",
     description:
-      "WissensKern wird auf einem Server in Ihrem Rechenzentrum, Serverraum oder in einer deutschen/EU-Private-Cloud-Umgebung installiert – abgeschottet von öffentlichen KI-Diensten.",
+      "OnLumis wird auf einem Server in Ihrem Rechenzentrum, Serverraum oder in einer deutschen/EU-Private-Cloud-Umgebung installiert – abgeschottet von öffentlichen KI-Diensten.",
   },
   {
     step: "04",
@@ -74,7 +74,7 @@ const advantages = [
   {
     icon: <IconDatabase />,
     title: "Nur Ihr Wissen, keine Fremddaten",
-    text: "WissensKern antwortet ausschließlich auf Basis Ihrer eingebetteten Unternehmensdaten – das reduziert Falschantworten (Halluzinationen) erheblich.",
+    text: "OnLumis antwortet ausschließlich auf Basis Ihrer eingebetteten Unternehmensdaten – das reduziert Falschantworten (Halluzinationen) erheblich.",
   },
   {
     icon: <IconEuro />,
@@ -102,7 +102,7 @@ const useCasePreview = [
   {
     icon: <IconSearch />,
     title: "Intelligente Dokumentensuche",
-    text: "Statt Ordnerstrukturen zu durchsuchen, findet WissensKern die richtige Information in Sekunden – inklusive Quellenangabe.",
+    text: "Statt Ordnerstrukturen zu durchsuchen, findet OnLumis die richtige Information in Sekunden – inklusive Quellenangabe.",
   },
   {
     icon: <IconUsers />,
@@ -120,27 +120,27 @@ const faqItems = [
   {
     question: "Ist meine KI dann wirklich komplett von der Cloud getrennt?",
     answer:
-      "Ja. WissensKern wird als On-Premise-System auf Ihrer eigenen Infrastruktur oder in einem deutschen/EU-Rechenzentrum Ihrer Wahl betrieben. Es besteht keine zwingende Verbindung zu Cloud-KI-Anbietern wie OpenAI, Microsoft oder Google – Ihre Daten verlassen Ihr Unternehmen nicht.",
+      "Ja. OnLumis wird als On-Premise-System auf Ihrer eigenen Infrastruktur oder in einem deutschen/EU-Rechenzentrum Ihrer Wahl betrieben. Es besteht keine zwingende Verbindung zu Cloud-KI-Anbietern wie OpenAI, Microsoft oder Google – Ihre Daten verlassen Ihr Unternehmen nicht.",
   },
   {
-    question: "Welche Hardware benötige ich für WissensKern?",
+    question: "Welche Hardware benötige ich für OnLumis?",
     answer:
       "Der Bedarf hängt von Datenmenge, Nutzerzahl und gewünschter Antwortgeschwindigkeit ab. Für viele KMU reicht ein moderner Server mit ausreichend Arbeitsspeicher und einer GPU für die KI-Berechnung. Im Rahmen der Analysephase erstellen wir Ihnen eine konkrete Hardware- und Betriebsempfehlung, inklusive Optionen für gehostete Private-Cloud-Umgebungen in Deutschland.",
   },
   {
-    question: "Wie lange dauert die Einführung von WissensKern?",
+    question: "Wie lange dauert die Einführung von OnLumis?",
     answer:
       "Ein typisches Projekt – von der Analyse über die Einbettung Ihrer Daten bis zum produktiven Betrieb – dauert je nach Datenmenge und Integrationstiefe wenige Wochen. Wir starten häufig mit einem klar abgegrenzten Pilotbereich, um schnell echten Mehrwert sichtbar zu machen.",
   },
   {
     question: "Können wir Fördermittel wie den Digitalbonus Hessen nutzen?",
     answer:
-      "In vielen Fällen ja. Digitalisierungsförderprogramme der Bundesländer – etwa der Digitalbonus Hessen – unterstützen KMU bei Investitionen in digitale Technologien wie WissensKern. Wir helfen Ihnen bei der Einschätzung der Förderfähigkeit und der Aufbereitung der notwendigen Unterlagen. Details finden Sie auf unserer Förderseite.",
+      "In vielen Fällen ja. Digitalisierungsförderprogramme der Bundesländer – etwa der Digitalbonus Hessen – unterstützen KMU bei Investitionen in digitale Technologien wie OnLumis. Wir helfen Ihnen bei der Einschätzung der Förderfähigkeit und der Aufbereitung der notwendigen Unterlagen. Details finden Sie auf unserer Förderseite.",
   },
   {
     question: "Was passiert mit meinen Daten während der Einrichtung?",
     answer:
-      "Ihre Dokumente werden ausschließlich innerhalb der vereinbarten, abgesicherten Umgebung verarbeitet. JULITH GmbH verarbeitet Daten im Rahmen eines Auftragsverarbeitungsvertrags (Art. 28 DSGVO) und ausschließlich zweckgebunden für die Einrichtung und den Betrieb Ihres WissensKern-Systems.",
+      "Ihre Dokumente werden ausschließlich innerhalb der vereinbarten, abgesicherten Umgebung verarbeitet. JULITH GmbH verarbeitet Daten im Rahmen eines Auftragsverarbeitungsvertrags (Art. 28 DSGVO) und ausschließlich zweckgebunden für die Einrichtung und den Betrieb Ihres OnLumis-Systems.",
   },
 ];
 
@@ -168,7 +168,7 @@ export default function HomePage() {
               Das Gehirn Ihres Unternehmens – lokal betrieben und nur mit Ihrem Wissen.
             </p>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
-              WissensKern von JULITH GmbH verwandelt Ihr internes Unternehmenswissen in eine
+              OnLumis von JULITH GmbH verwandelt Ihr internes Unternehmenswissen in eine
               eigene, lokal gehostete KI – ohne dass Ihre Daten jemals in eine fremde Cloud
               wandern. Volle Kontrolle, volle DSGVO-Konformität, volle Wertschöpfung im eigenen
               Haus.
@@ -178,7 +178,7 @@ export default function HomePage() {
                 Kostenloses Erstgespräch vereinbaren <IconArrowRight />
               </CtaButton>
               <CtaButton href="/produkt" variant="ghost" className="border-white/25 text-white hover:border-accent hover:text-accent">
-                So funktioniert WissensKern
+                So funktioniert OnLumis
               </CtaButton>
             </div>
             <ul className="mt-12 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/70">
@@ -215,7 +215,7 @@ export default function HomePage() {
             </div>
             <div className="rounded-2xl border border-accent-strong/30 bg-surface p-8">
               <h3 className="font-display text-xl font-semibold text-ink dark:text-white">
-                Die Antwort: WissensKern
+                Die Antwort: OnLumis
               </h3>
               <ul className="mt-5 space-y-3 text-sm leading-relaxed text-muted">
                 <li>– Betrieb vollständig On-Premise oder in einer deutschen/EU-Private-Cloud.</li>
@@ -256,7 +256,7 @@ export default function HomePage() {
         <Container>
           <SectionHeading
             eyebrow="Ihre Vorteile"
-            title="Was WissensKern für Ihr Unternehmen bedeutet"
+            title="Was OnLumis für Ihr Unternehmen bedeutet"
             description="Datenschutz, Kontrolle und Wirtschaftlichkeit müssen sich nicht widersprechen."
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -281,7 +281,7 @@ export default function HomePage() {
         <Container>
           <SectionHeading
             eyebrow="Anwendungsfälle"
-            title="Wo WissensKern in Ihrem Unternehmen sofort wirkt"
+            title="Wo OnLumis in Ihrem Unternehmen sofort wirkt"
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {useCasePreview.map((item) => (
@@ -313,7 +313,7 @@ export default function HomePage() {
               </h2>
               <p className="mt-4 max-w-2xl text-muted">
                 Viele Bundesländer fördern die digitale Transformation von KMU – darunter der
-                Digitalbonus Hessen. WissensKern kann als förderfähiges Digitalisierungsprojekt
+                Digitalbonus Hessen. OnLumis kann als förderfähiges Digitalisierungsprojekt
                 eingebracht werden. Wir unterstützen Sie bei der Einschätzung und Antragstellung.
               </p>
             </div>
@@ -331,7 +331,7 @@ export default function HomePage() {
       <section className="bg-primary py-20 text-white sm:py-24">
         <Container className="flex flex-col items-center gap-6 text-center">
           <h2 className="font-display text-3xl font-semibold sm:text-4xl">
-            Lernen Sie WissensKern in einem unverbindlichen Gespräch kennen
+            Lernen Sie OnLumis in einem unverbindlichen Gespräch kennen
           </h2>
           <p className="max-w-xl text-white/75">
             Wir zeigen Ihnen, wie eine lokale KI auf Basis Ihres eigenen Wissens konkret für Ihr

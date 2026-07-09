@@ -26,13 +26,13 @@ function escapeHtml(value: string) {
 }
 
 export async function sendContactMail(data: ContactFormValues) {
-  const mailFrom = process.env.MAIL_FROM || "WissensKern Website <no-reply@wissenskern.ai>";
-  const mailTo = process.env.MAIL_TO || "info@wissenskern.ai";
+  const mailFrom = process.env.MAIL_FROM || "OnLumis Website <no-reply@onlumis.ai>";
+  const mailTo = process.env.MAIL_TO || "info@onlumis.ai";
 
   const transport = getTransport();
 
   const text = [
-    `Neue Kontaktanfrage über wissenskern.ai`,
+    `Neue Kontaktanfrage über onlumis.ai`,
     ``,
     `Name: ${data.name}`,
     `Unternehmen: ${data.company}`,
@@ -47,7 +47,7 @@ export async function sendContactMail(data: ContactFormValues) {
     .join("\n");
 
   const html = `
-    <h2>Neue Kontaktanfrage über wissenskern.ai</h2>
+    <h2>Neue Kontaktanfrage über onlumis.ai</h2>
     <p><strong>Name:</strong> ${escapeHtml(data.name)}</p>
     <p><strong>Unternehmen:</strong> ${escapeHtml(data.company)}</p>
     <p><strong>E-Mail:</strong> ${escapeHtml(data.email)}</p>

@@ -1,15 +1,15 @@
 export const siteConfig = {
-  name: "WissensKern",
+  name: "OnLumis",
   tagline: "Ihre Firma. Ihre KI.",
-  domain: "wissenskern.ai",
-  url: "https://wissenskern.ai",
+  domain: "onlumis.ai",
+  url: "https://onlumis.ai",
   description:
-    "WissensKern ist die lokale KI-Lösung der JULITH GmbH für kleine und mittlere Unternehmen: Ihr Unternehmenswissen wird in ein On-Premise-KI-System eingebettet – DSGVO-konform, ohne Cloud-Zwang und vollständig unter eigener Kontrolle.",
+    "OnLumis ist die lokale KI-Lösung der JULITH GmbH für kleine und mittlere Unternehmen: Ihr Unternehmenswissen wird in ein On-Premise-KI-System eingebettet – DSGVO-konform, ohne Cloud-Zwang und vollständig unter eigener Kontrolle.",
   locale: "de_DE",
   company: {
     legalName: "JULITH GmbH",
     url: "https://julith.gmbh",
-    contactEmail: "info@wissenskern.ai",
+    contactEmail: "info@onlumis.ai",
     legalEmail: "info@julith.gmbh",
     address: {
       street: "Erlengasse 3",

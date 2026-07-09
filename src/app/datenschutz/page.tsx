@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Datenschutzerklärung",
   description:
-    "Datenschutzerklärung von WissensKern gemäß Schweizer Datenschutzgesetz (DSG) und, soweit anwendbar, der DSGVO.",
+    "Datenschutzerklärung von OnLumis gemäß Schweizer Datenschutzgesetz (DSG) und, soweit anwendbar, der DSGVO.",
   alternates: { canonical: "/datenschutz" },
   robots: { index: true, follow: true },
 };
@@ -56,7 +56,7 @@ export default function DatenschutzPage() {
             <p>
               {siteConfig.company.legalName} hat ihren Sitz in der Schweiz. Diese
               Datenschutzerklärung richtet sich in erster Linie nach dem Schweizerischen
-              Bundesgesetz über den Datenschutz (DSG). Da sich das Angebot von WissensKern auch
+              Bundesgesetz über den Datenschutz (DSG). Da sich das Angebot von OnLumis auch
               an Unternehmen in Deutschland und der übrigen EU richtet und dabei personenbezogene
               Daten von Personen in der EU/dem EWR bearbeitet werden können, beachten wir
               ergänzend, soweit anwendbar, die Vorgaben der europäischen
@@ -160,10 +160,10 @@ export default function DatenschutzPage() {
           </div>
 
           <div>
-            <h2>7. Hinweis zum Produkt WissensKern</h2>
+            <h2>7. Hinweis zum Produkt OnLumis</h2>
             <p>
               Diese Datenschutzerklärung betrifft ausschließlich den Betrieb dieser Website
-              (wissenskern.ai). Setzen Sie das Produkt WissensKern in Ihrem eigenen Unternehmen
+              (onlumis.ai). Setzen Sie das Produkt OnLumis in Ihrem eigenen Unternehmen
               ein, sind Sie als Kunde grundsätzlich selbst datenschutzrechtlich Verantwortlicher
               für die durch Sie in das System eingebrachten Unternehmensdaten. Im Rahmen einer
               Beauftragung schließen wir mit Ihnen einen gesonderten Vertrag zur

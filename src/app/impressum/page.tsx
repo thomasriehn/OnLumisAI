@@ -4,7 +4,7 @@ import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Impressum",
-  description: "Impressum von WissensKern, ein Produkt der JULITH GmbH, Schweiz.",
+  description: "Impressum von OnLumis, ein Produkt der JULITH GmbH, Schweiz.",
   alternates: { canonical: "/impressum" },
   robots: { index: true, follow: true },
 };
@@ -79,7 +79,7 @@ export default function ImpressumPage() {
               Hinweis zum Angebot
             </h2>
             <p className="mt-3">
-              {siteConfig.company.legalName} hat ihren Sitz in der Schweiz. WissensKern (
+              {siteConfig.company.legalName} hat ihren Sitz in der Schweiz. OnLumis (
               {siteConfig.url}) ist ein Produkt der {siteConfig.company.legalName} und richtet
               sich als B2B-Angebot auch an Unternehmenskundinnen und -kunden in Deutschland und
               der übrigen EU. Es liegt kein Verbraucherangebot im Sinne der

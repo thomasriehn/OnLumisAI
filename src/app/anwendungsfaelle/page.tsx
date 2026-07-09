@@ -6,7 +6,7 @@ import { CtaButton } from "@/components/CtaButton";
 import { IconCheckCircle, IconArrowRight } from "@/components/icons";
 
 export const metadata: Metadata = {
-  title: "Anwendungsfälle – WissensKern in Ihren Fachbereichen",
+  title: "Anwendungsfälle – OnLumis in Ihren Fachbereichen",
   description:
     "Konkrete Anwendungsfälle einer lokalen Unternehmens-KI: von Vertrieb und Kundenservice über HR und IT bis zu Recht, Produktion und Geschäftsführung.",
   alternates: { canonical: "/anwendungsfaelle" },
@@ -101,8 +101,8 @@ export default function AnwendungsfaellePage() {
     <>
       <PageHero
         eyebrow="Anwendungsfälle"
-        title="WissensKern im Alltag Ihrer Fachbereiche"
-        description="Ob Vertrieb, HR, IT oder Produktion: WissensKern macht das vorhandene Wissen Ihres Unternehmens für jede Abteilung nutzbar – zugeschnitten auf die jeweiligen Berechtigungen."
+        title="OnLumis im Alltag Ihrer Fachbereiche"
+        description="Ob Vertrieb, HR, IT oder Produktion: OnLumis macht das vorhandene Wissen Ihres Unternehmens für jede Abteilung nutzbar – zugeschnitten auf die jeweiligen Berechtigungen."
       >
         <CtaButton href="/kontakt">Passenden Anwendungsfall besprechen</CtaButton>
       </PageHero>
@@ -153,7 +153,7 @@ export default function AnwendungsfaellePage() {
             Welcher Anwendungsfall passt zu Ihnen?
           </h2>
           <p className="max-w-xl text-white/75">
-            Erzählen Sie uns von Ihrer Situation – wir zeigen Ihnen, wie WissensKern in Ihrem
+            Erzählen Sie uns von Ihrer Situation – wir zeigen Ihnen, wie OnLumis in Ihrem
             konkreten Umfeld eingesetzt werden kann.
           </p>
           <CtaButton href="/kontakt">
