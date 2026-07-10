@@ -10,7 +10,7 @@ serving:
   args:
     served-model-name: whisper
     task: transcription
-    gpu-memory-utilization: 0.06
+    gpu-memory-utilization: 0.04
 notes: >
   Bedient die Spracheingabe in Chat/Suche (/v1/transcriptions) und die
   Audio-Ingestion (Meeting-Aufnahmen in der Wissensbasis). Audio verlässt

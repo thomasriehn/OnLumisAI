@@ -70,7 +70,7 @@ done
 
 case "$MODEL" in
   standard)  CHAT_MODEL_ID="nvidia/Qwen3.6-35B-A3B-NVFP4";                 CHAT_MEM=0.55 ;;
-  qualitaet) CHAT_MODEL_ID="nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4"; CHAT_MEM=0.75 ;;
+  qualitaet) CHAT_MODEL_ID="nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4"; CHAT_MEM=0.72 ;;
   klassisch) CHAT_MODEL_ID="nvidia/Qwen3-32B-NVFP4";                       CHAT_MEM=0.50 ;;
   kompakt)   CHAT_MODEL_ID="nvidia/Llama-3.1-8B-Instruct-NVFP4";           CHAT_MEM=0.35 ;;
   */*)       CHAT_MODEL_ID="$MODEL";                                       CHAT_MEM=0.55 ;;

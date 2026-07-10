@@ -12,7 +12,7 @@ serving:
   args:
     served-model-name: embed
     task: embed
-    gpu-memory-utilization: 0.06
+    gpu-memory-utilization: 0.04
 notes: >
   Multilingual (stark auf Deutsch), 1024 Dimensionen (= vector(1024) in
   knowledge.chunks). Ein Wechsel des Embedding-Modells erfordert Re-Indexierung
