@@ -153,12 +153,13 @@ services:
     <<: [*restart, *gpu]
     profiles: [models]
     command: >
-      vllm serve ${CHAT_MODEL_ID:-Qwen/Qwen3-32B-FP8}
+      vllm serve ${CHAT_MODEL_ID:-nvidia/Qwen3.6-35B-A3B-NVFP4}
       --served-model-name chat
       --host 0.0.0.0 --port 8001
       --gpu-memory-utilization ${CHAT_GPU_MEM_FRACTION:-0.55}
       --max-model-len ${CHAT_MAX_MODEL_LEN:-16384}
       --enable-lora
+      ${CHAT_VLLM_EXTRA_ARGS:-}
     environment:
       HF_HUB_OFFLINE: ${HF_HUB_OFFLINE:-0}
     volumes:

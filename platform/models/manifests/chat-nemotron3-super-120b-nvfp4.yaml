@@ -1,0 +1,20 @@
+# Qualitäts-Chat-LLM (NVFP4, Preset "qualitaet" in deploy/setup-spark.sh)
+name: chat
+role: chat-llm
+hf_repo: nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4
+revision: main
+license: NVIDIA Open Model License (siehe Modellkarte)
+languages: [de, en, multilingual]
+quantization: NVFP4 (TensorRT Model Optimizer, Blackwell-nativ)
+serving:
+  engine: vllm
+  args:
+    served-model-name: chat
+    max-model-len: 16384
+    gpu-memory-utilization: 0.75
+    enable-lora: true
+notes: >
+  NVIDIAs Nemotron-3-Super (120B, ~12B aktiv) als NVFP4 – höchste
+  Antwortqualität, die auf einer einzelnen Spark (128 GB unified) noch
+  komfortabel läuft. GPU-Mem-Fraction 0.75 einplanen; bei gleichzeitigem
+  Whisper-/VLM-Betrieb Budget prüfen (Architektur §10).

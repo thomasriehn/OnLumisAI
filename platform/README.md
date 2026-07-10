@@ -26,20 +26,20 @@ FastAPI-Orchestrator und Next.js-Chat-UI.
 
 ## Quickstart auf der DGX Spark
 
+Ein Befehl richtet alles ein – Vorprüfungen, `.env` mit generierten
+Zugangsdaten, **NVIDIA-NVFP4-Chatmodell**, alle weiteren Modelle,
+Stack-Start, Beispielkorpus, goldene Fragen, Smoke-Test, Autostart:
+
 ```bash
-cp .env.example .env        # Passwörter setzen!
-./models/download.sh Qwen/Qwen3-32B-FP8      # Modelle vorab laden
-./models/download.sh BAAI/bge-m3
-./models/download.sh BAAI/bge-reranker-v2-m3
-
-docker compose --profile models up -d --build
-
-# Wissensquelle registrieren (Pfad liegt unter SOURCES_PATH aus .env,
-# im Container unter /data/sources):
-docker compose exec ingestion python -m worker.main add-source \
-  --name handbuecher --root /data/sources/beispiel --acl all-users
-docker compose exec ingestion python -m worker.main once   # Erst-Sync sofort
+docker login nvcr.io                          # einmalig (NGC-API-Key)
+./deploy/setup-spark.sh --domain onlumis.firma.local \
+    --model standard --with-monitoring --install-systemd
 ```
+
+Chat-Modell-Presets (NVIDIA-NVFP4, Blackwell-nativ): `standard`
+(Qwen3.6-35B-A3B, MoE → schnell), `qualitaet` (Nemotron-3-Super-120B),
+`klassisch` (Qwen3-32B), `kompakt` (Llama-3.1-8B) oder jede HF-ID.
+Details und manuelle Schritte: [`deploy/RUNBOOK.md`](deploy/RUNBOOK.md).
 
 Danach: `https://<ONLUMIS_DOMAIN>/` (Chat), `/suche` (Intranet-Suche),
 `/admin` (Verwaltung), `/api/docs` (OpenAPI), `/api/mcp` (MCP-Endpoint für

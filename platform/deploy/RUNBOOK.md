@@ -5,32 +5,43 @@ im Verzeichnis `platform/` (empfohlen: `/opt/onlumis/platform`).
 
 ## 1. Erstinstallation auf der Spark
 
-1. **DGX OS vorbereiten:** NVMe mit LUKS verschlüsseln (Installer-Option),
-   Docker + NVIDIA Container Toolkit sind vorinstalliert. NGC-Login für die
-   vLLM-Images: `docker login nvcr.io` (API-Key aus ngc.nvidia.com).
-2. **Code holen:** `git clone <repo> /opt/onlumis && cd /opt/onlumis/platform`
-   (Air-Gap: Bundle statt Clone, siehe §6).
-3. **Konfigurieren:** `cp .env.example .env` – Pflichtwerte setzen
-   (`POSTGRES_PASSWORD`, `KEYCLOAK_DB_PASSWORD`, `KEYCLOAK_ADMIN_PASSWORD`,
-   `ONLUMIS_DOMAIN`); für Produktion `AUTH_MODE=oidc`.
-4. **Modelle laden:**
-   ```bash
-   ./models/download.sh Qwen/Qwen3-32B-FP8
-   ./models/download.sh BAAI/bge-m3
-   ./models/download.sh BAAI/bge-reranker-v2-m3
-   ./models/download.sh openai/whisper-large-v3-turbo
-   ```
-5. **Start:** `docker compose --profile models up -d --build`
-   (mit Monitoring: zusätzlich `--profile monitoring`).
+**Empfohlener Weg – Setup-Skript** (erledigt Schritte 3–5 und 7–9 automatisch,
+inkl. NVFP4-Chatmodell, Beispielkorpus, goldener Fragen und Smoke-Test):
+
+```bash
+# Voraussetzungen: DGX OS mit LUKS, NGC-Login (docker login nvcr.io)
+git clone <repo> /opt/onlumis && cd /opt/onlumis/platform
+./deploy/setup-spark.sh --check-only                       # Vorprüfung
+./deploy/setup-spark.sh --domain onlumis.firma.local \
+    --model standard --with-monitoring --install-systemd
+```
+
+Modell-Presets (NVIDIA-NVFP4): `standard` (Qwen3.6-35B-A3B, schnell),
+`qualitaet` (Nemotron-3-Super-120B), `klassisch` (Qwen3-32B), `kompakt`
+(Llama-3.1-8B) – oder eine beliebige HF-ID. `--help` zeigt alle Optionen.
+
+**Manuelle Schritte danach (macht kein Skript):**
+
 6. **Keycloak anbinden:** `https://<domain>/auth` → Realm `onlumis` →
-   *User Federation* → AD/LDAP konfigurieren; **Demo-Nutzer `demo` löschen**.
-7. **Quellen anbinden:** über `https://<domain>/admin` (siehe Admin-Handbuch),
-   Erst-Sync: `docker compose exec ingestion python -m worker.main once`.
-8. **Goldene Fragen** einspielen/pflegen:
-   `docker compose exec -T postgres psql -U onlumis -d onlumis < db/seed/eval-beispiel.sql`
-   (danach kundenspezifisch ersetzen).
-9. **Autostart:** `deploy/systemd/onlumis-platform.service` installieren
-   (Pfad prüfen), ebenso `onlumis-backup.{service,timer}`.
+   *User Federation* → AD/LDAP konfigurieren; **Demo-Nutzer `demo` löschen**;
+   in `.env` `AUTH_MODE=oidc` setzen und `docker compose up -d api webapp`.
+7. **Echte Quellen anbinden:** über `https://<domain>/admin`
+   (Admin-Handbuch §3); goldene Fragen kundenspezifisch ersetzen.
+
+<details><summary>Manuelle Installation ohne Skript (Referenz)</summary>
+
+1. `cp .env.example .env` – Pflichtwerte setzen (`POSTGRES_PASSWORD`,
+   `KEYCLOAK_DB_PASSWORD`, `KEYCLOAK_ADMIN_PASSWORD`, `ONLUMIS_DOMAIN`).
+2. Modelle laden: `./models/download.sh <CHAT_MODEL_ID aus .env>`, dazu
+   `BAAI/bge-m3`, `BAAI/bge-reranker-v2-m3`, `openai/whisper-large-v3-turbo`.
+3. `docker compose --profile models up -d --build`
+4. Beispielquelle: `docker compose exec ingestion python -m worker.main
+   add-source --name beispiel --root /data/sources/beispiel --acl all-users`
+   und `… worker.main once`; goldene Fragen: `docker compose exec -T postgres
+   psql -U onlumis -d onlumis < db/seed/eval-beispiel.sql`.
+5. systemd-Units aus `deploy/systemd/` installieren (Pfade anpassen).
+
+</details>
 
 ## 2. Smoke-Checks (nach Installation/Update/Restore)
 

@@ -200,7 +200,7 @@ pro Instanz, da unified memory), alle OpenAI-kompatibel:
 
 | Rolle | Standardmodell (v1) | Alternativen | Speicher (Richtwert) |
 |---|---|---|---|
-| **Chat-LLM** | Qwen3-32B (FP8) – sehr gutes Deutsch, starke RAG-Treue | gpt-oss-120b (MXFP4, MoE – höhere Qualität, mehr RAM), Llama-3.3-70B (FP4/AWQ – langsamer), Mistral-Small-24B (schneller/sparsamer) | ~40–65 GB inkl. KV-Cache |
+| **Chat-LLM** | nvidia/Qwen3.6-35B-A3B-**NVFP4** (MoE, 3B aktiv – schnell auf der bandbreitenlimitierten Spark; Blackwell-natives NVFP4 von NVIDIA) | nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4 (höchste Qualität), nvidia/Qwen3-32B-NVFP4 (dicht/konservativ), nvidia/Llama-3.1-8B-Instruct-NVFP4 (kompakt) | ~30–90 GB inkl. KV-Cache je Preset |
 | **Embeddings** | BGE-M3 (multilingual, 1024 Dim., 8k Kontext) | Qwen3-Embedding-0.6B/4B | ~3–5 GB |
 | **Reranker** | BGE-reranker-v2-m3 | Qwen3-Reranker-0.6B | ~3–5 GB |
 | **VLM/OCR** (on-demand) | Qwen2.5-VL-7B für komplexe Scans/Tabellen | – | ~10 GB, nur bei Ingestion-Läufen gestartet |
