@@ -53,10 +53,19 @@ def build_context(chunks: list[RetrievedChunk]) -> tuple[str, list[dict]]:
     return "\n\n".join(parts), citations
 
 
+NO_CONTEXT_ANSWER = (
+    "Dazu finde ich in den für Sie freigegebenen Unternehmensdokumenten keine "
+    "belastbare Quelle. Bitte formulieren Sie die Frage anders oder wenden Sie "
+    "sich an die zuständige Fachabteilung – die Frage wird zur Verbesserung der "
+    "Wissensbasis ausgewertet."
+)
+
+
 def build_messages(
     question: str,
     chunks: list[RetrievedChunk],
     history: list[dict] | None = None,
+    extra_instructions: str | None = None,
 ) -> tuple[list[dict], list[dict]]:
     """Baut die Chat-Messages für das LLM; gibt (messages, citations) zurück."""
     context, citations = build_context(chunks)
@@ -67,7 +76,10 @@ def build_messages(
             "KONTEXT: (keine passenden Dokumente gefunden)\n\n"
             f"FRAGE: {question}"
         )
-    messages: list[dict] = [{"role": "system", "content": SYSTEM_PROMPT}]
+    system = SYSTEM_PROMPT
+    if extra_instructions:
+        system += f"\n\nZusätzliche Vorgaben für diese Antwort:\n{extra_instructions}"
+    messages: list[dict] = [{"role": "system", "content": system}]
     for msg in history or []:
         messages.append({"role": msg["role"], "content": msg["content"]})
     messages.append({"role": "user", "content": user_content})

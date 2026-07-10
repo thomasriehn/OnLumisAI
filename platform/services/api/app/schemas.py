@@ -88,7 +88,9 @@ class FeedbackRequest(BaseModel):
 
 class SourceCreate(BaseModel):
     name: str = Field(min_length=1, max_length=200)
-    kind: Literal["filesystem", "confluence", "sharepoint", "imap"] = "filesystem"
+    kind: Literal[
+        "filesystem", "confluence", "sharepoint", "imap", "jira", "webdav", "gdrive"
+    ] = "filesystem"
     config: dict = Field(default_factory=dict)
     default_acl: list[str] = Field(default_factory=lambda: ["all-users"])
     enabled: bool = True

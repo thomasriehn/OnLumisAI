@@ -16,9 +16,13 @@ type EvalRun = {
   id: string; started_at: string; finished_at: string | null; model: string;
   stats: { total: number; retrieval_rate: number | null; keyword_rate: number | null } | null;
 };
+type GapReport = {
+  total: number;
+  gaps: { question: string; occurrences: number; distinct_users: number; last_seen: string }[];
+};
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`/api/admin/${path}`, {
+  const response = await fetch(`/bff/admin/${path}`, {
     headers: { "content-type": "application/json" },
     ...init,
   });
@@ -36,20 +40,24 @@ export function AdminView() {
   const [runs, setRuns] = useState<EvalRun[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [uploadInfo, setUploadInfo] = useState<string | null>(null);
+  const [gaps, setGaps] = useState<GapReport | null>(null);
 
   const reload = useCallback(async () => {
     try {
       setError(null);
-      const [s, src, fb, ev] = await Promise.all([
+      const [s, src, fb, ev, gapsReport] = await Promise.all([
         api<Stats>("stats"),
         api<Source[]>("sources"),
         api<FeedbackEntry[]>("feedback?reviewed=false"),
         api<EvalRun[]>("evals/runs"),
+        api<GapReport>("reports/knowledge-gaps?days=30"),
       ]);
       setStats(s);
       setSources(src);
       setFeedback(fb);
       setRuns(ev);
+      setGaps(gapsReport);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unbekannter Fehler");
     }
@@ -173,6 +181,45 @@ export function AdminView() {
         </section>
 
         <section className="card">
+          <h2>Dokumente hochladen</h2>
+          <p className="muted">
+            Für Dokumente ohne Quellsystem – sie landen in der Quelle
+            „uploads" (Sichtbarkeit gemäß deren ACL) und werden beim nächsten
+            Sync indexiert.
+          </p>
+          <form
+            className="source-form"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              const form = event.currentTarget;
+              const input = form.querySelector<HTMLInputElement>("input[type=file]");
+              if (!input?.files?.length) return;
+              const data = new FormData();
+              for (const file of input.files) data.append("files", file);
+              setBusy(true);
+              try {
+                const response = await fetch("/bff/admin/uploads", {
+                  method: "POST",
+                  body: data,
+                });
+                if (!response.ok) throw new Error(`Fehler ${response.status}`);
+                setUploadInfo((await response.json()).saved.join(", "));
+                form.reset();
+                await reload();
+              } catch (err) {
+                setError(err instanceof Error ? err.message : "Upload fehlgeschlagen");
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            <input type="file" multiple accept=".pdf,.docx,.md,.txt,.html" />
+            <button type="submit" disabled={busy}>Hochladen</button>
+          </form>
+          {uploadInfo && <p className="muted">Gespeichert: {uploadInfo}</p>}
+        </section>
+
+        <section className="card">
           <h2>Feedback-Kuratierung ({feedback.length} offen)</h2>
           {feedback.map((entry) => (
             <div className="citation" key={entry.id} style={{ maxWidth: "100%" }}>
@@ -186,6 +233,35 @@ export function AdminView() {
             </div>
           ))}
           {feedback.length === 0 && <p className="muted">Keine offenen Einträge.</p>}
+        </section>
+
+        <section className="card">
+          <h2>
+            Wissenslücken – gefragte, aber unbeantwortete Themen
+            {gaps ? ` (${gaps.total} in 30 Tagen)` : ""}
+          </h2>
+          <p className="muted">
+            Fragen ohne belastbare Quelle (Nutzer pseudonymisiert). Diese Themen
+            lohnt es zu dokumentieren oder als Quelle anzubinden.
+          </p>
+          <table>
+            <thead>
+              <tr><th>Frage</th><th>Häufigkeit</th><th>Nutzer</th><th>Zuletzt</th></tr>
+            </thead>
+            <tbody>
+              {gaps?.gaps.map((gap) => (
+                <tr key={gap.question}>
+                  <td>{gap.question}</td>
+                  <td>{gap.occurrences}</td>
+                  <td>{gap.distinct_users}</td>
+                  <td>{new Date(gap.last_seen).toLocaleDateString("de-DE")}</td>
+                </tr>
+              ))}
+              {(!gaps || gaps.gaps.length === 0) && (
+                <tr><td colSpan={4}>Keine offenen Wissenslücken – gut dokumentiert.</td></tr>
+              )}
+            </tbody>
+          </table>
         </section>
 
         <section className="card">

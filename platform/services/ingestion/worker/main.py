@@ -25,11 +25,15 @@ from .chunking import chunk_blocks
 from .config import settings
 from .connectors.confluence import ConfluenceConnector
 from .connectors.filesystem import FilesystemConnector, acl_for
+from .connectors.gdrive import GoogleDriveConnector
 from .connectors.imap import ImapConnector
+from .connectors.jira import JiraConnector
 from .connectors.sharepoint import SharePointConnector
+from .connectors.webdav import WebDavConnector
 from .embedder import Embedder
 from .engine import SyncStats, sync_remote_source
-from .ocr import parse_with_ocr
+from .ocr import parse_document
+from .transcriber import AUDIO_EXTENSIONS, AudioTranscriber
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("onlumis.ingestion")
@@ -40,18 +44,27 @@ REMOTE_CONNECTORS = {
     "confluence": ConfluenceConnector,
     "sharepoint": SharePointConnector,
     "imap": ImapConnector,
+    "jira": JiraConnector,
+    "webdav": WebDavConnector,
+    "gdrive": GoogleDriveConnector,
 }
 
 
 async def sync_filesystem_source(
-    pool: asyncpg.Pool, embedder: Embedder, source: asyncpg.Record
+    pool: asyncpg.Pool,
+    embedder: Embedder,
+    source: asyncpg.Record,
+    transcriber: AudioTranscriber | None = None,
 ) -> SyncStats:
     stats = SyncStats()
     source_id: UUID = source["id"]
     config = json.loads(source["config"])
     default_acl = list(source["default_acl"])
     acl_rules = config.get("acl_rules", [])
-    connector = FilesystemConnector(Path(config["root_path"]))
+    connector = FilesystemConnector(
+        Path(config["root_path"]),
+        extra_extensions=AUDIO_EXTENSIONS if transcriber else None,
+    )
 
     async with pool.acquire() as conn:
         existing = await indexer.load_document_index(conn, source_id)
@@ -76,7 +89,10 @@ async def sync_filesystem_source(
                 stats.unchanged += 1
                 continue
 
-            parsed = parse_with_ocr(f.path)
+            if transcriber and f.path.suffix.lower() in AUDIO_EXTENSIONS:
+                parsed = await transcriber.transcribe(f.path)
+            else:
+                parsed = parse_document(f.path)
             chunks = chunk_blocks(parsed.blocks)
             if not chunks:
                 logger.warning("Kein extrahierbarer Text: %s (Scan ohne OCR?)", f.external_id)
@@ -111,11 +127,14 @@ async def sync_filesystem_source(
 
 
 async def _sync_one(
-    pool: asyncpg.Pool, embedder: Embedder, source: asyncpg.Record
+    pool: asyncpg.Pool,
+    embedder: Embedder,
+    source: asyncpg.Record,
+    transcriber: AudioTranscriber | None = None,
 ) -> SyncStats:
     kind = source["kind"]
     if kind == "filesystem":
-        return await sync_filesystem_source(pool, embedder, source)
+        return await sync_filesystem_source(pool, embedder, source, transcriber)
     connector_cls = REMOTE_CONNECTORS.get(kind)
     if connector_cls is None:
         raise ValueError(f"Unbekannter Quell-Typ: {kind}")
@@ -126,7 +145,11 @@ async def _sync_one(
         await connector.aclose()
 
 
-async def run_once(pool: asyncpg.Pool, embedder: Embedder) -> None:
+async def run_once(
+    pool: asyncpg.Pool,
+    embedder: Embedder,
+    transcriber: AudioTranscriber | None = None,
+) -> None:
     async with pool.acquire() as conn:
         sources = await conn.fetch(
             """
@@ -142,7 +165,7 @@ async def run_once(pool: asyncpg.Pool, embedder: Embedder) -> None:
     for source in sources:
         logger.info("Sync von Quelle '%s' (%s) startet", source["name"], source["kind"])
         try:
-            stats = await _sync_one(pool, embedder, source)
+            stats = await _sync_one(pool, embedder, source, transcriber)
             logger.info("Quelle '%s': %s", source["name"], stats.summary())
         except Exception as exc:  # noqa: BLE001 - eine Quelle darf andere nicht stoppen
             logger.exception("Sync von '%s' fehlgeschlagen", source["name"])
@@ -150,10 +173,14 @@ async def run_once(pool: asyncpg.Pool, embedder: Embedder) -> None:
                 await indexer.set_sync_status(conn, source["id"], f"error: {exc}")
 
 
-async def run_loop(pool: asyncpg.Pool, embedder: Embedder) -> None:
+async def run_loop(
+    pool: asyncpg.Pool,
+    embedder: Embedder,
+    transcriber: AudioTranscriber | None = None,
+) -> None:
     logger.info("Sync-Loop, Intervall %ss", settings.sync_interval_seconds)
     while True:
-        await run_once(pool, embedder)
+        await run_once(pool, embedder, transcriber)
         await asyncio.sleep(settings.sync_interval_seconds)
 
 
@@ -192,10 +219,11 @@ async def amain(argv: list[str]) -> int:
             return 0
         async with httpx.AsyncClient(timeout=settings.request_timeout_seconds) as http:
             embedder = Embedder(http)
+            transcriber = AudioTranscriber(http) if settings.transcribe_base_url else None
             if args.command == "once":
-                await run_once(pool, embedder)
+                await run_once(pool, embedder, transcriber)
             else:
-                await run_loop(pool, embedder)
+                await run_loop(pool, embedder, transcriber)
         return 0
     finally:
         await pool.close()

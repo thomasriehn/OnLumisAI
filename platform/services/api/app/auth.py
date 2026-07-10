@@ -69,8 +69,9 @@ async def _api_key_user(key: str) -> User:
 
 
 class _OidcValidator:
-    def __init__(self, issuer_url: str) -> None:
+    def __init__(self, issuer_url: str, internal_url: str | None = None) -> None:
         self._issuer_url = issuer_url.rstrip("/")
+        self._discovery_url = (internal_url or issuer_url).rstrip("/")
         self._jwk_client: jwt.PyJWKClient | None = None
         self._lock = asyncio.Lock()
 
@@ -80,10 +81,12 @@ class _OidcValidator:
                 if self._jwk_client is None:
                     async with httpx.AsyncClient(timeout=10) as http:
                         r = await http.get(
-                            f"{self._issuer_url}/.well-known/openid-configuration"
+                            f"{self._discovery_url}/.well-known/openid-configuration"
                         )
                         r.raise_for_status()
                         jwks_uri = r.json()["jwks_uri"]
+                        # JWKS ggf. über den internen Host abrufen
+                        jwks_uri = jwks_uri.replace(self._issuer_url, self._discovery_url)
                     self._jwk_client = jwt.PyJWKClient(jwks_uri, cache_keys=True)
         return self._jwk_client
 
@@ -118,7 +121,9 @@ def _oidc_validator() -> _OidcValidator:
     if _validator is None:
         if not settings.oidc_issuer_url:
             raise HTTPException(status_code=500, detail="OIDC_ISSUER_URL nicht konfiguriert")
-        _validator = _OidcValidator(settings.oidc_issuer_url)
+        _validator = _OidcValidator(
+            settings.oidc_issuer_url, settings.oidc_internal_url or None
+        )
     return _validator
 
 

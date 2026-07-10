@@ -19,5 +19,15 @@ class Settings(BaseSettings):
     ocr_enabled: bool = True
     ocr_languages: str = "deu+eng"
 
+    # Parsing-Backend: "simple" (pypdf/bs4/docx) oder "docling"
+    # (Layout-/Tabellenerkennung, pip install .[docling])
+    parsing_backend: str = "simple"
+
+    # Audio-Transkription (Meeting-Mitschnitte) über lokales Whisper;
+    # leer = Audio-Dateien werden nicht indexiert
+    transcribe_base_url: str = ""
+    transcribe_model: str = "whisper"
+    transcribe_language: str = "de"
+
 
 settings = Settings()

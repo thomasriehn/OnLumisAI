@@ -60,8 +60,9 @@ class ScannedFile:
 
 
 class FilesystemConnector:
-    def __init__(self, root: Path) -> None:
+    def __init__(self, root: Path, extra_extensions: set[str] | None = None) -> None:
         self.root = root
+        self.extensions = SUPPORTED_EXTENSIONS | (extra_extensions or set())
 
     def scan(self) -> Iterator[ScannedFile]:
         if not self.root.is_dir():
@@ -71,7 +72,7 @@ class FilesystemConnector:
                 continue
             if any(part.startswith(".") for part in path.relative_to(self.root).parts):
                 continue  # versteckte Dateien/Verzeichnisse
-            if path.suffix.lower() not in SUPPORTED_EXTENSIONS:
+            if path.suffix.lower() not in self.extensions:
                 continue
             stat = path.stat()
             yield ScannedFile(

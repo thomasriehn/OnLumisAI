@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     # "oidc" validiert Keycloak-Bearer-Tokens.
     auth_mode: Literal["dev", "oidc"] = "dev"
     oidc_issuer_url: str = ""
+    # Interner Keycloak-URL für Discovery/JWKS (Container-Netz); der iss-Claim
+    # wird weiterhin gegen oidc_issuer_url (öffentliche URL) geprüft.
+    oidc_internal_url: str = ""
     oidc_audience: str | None = None
     admin_group: str = "onlumis-admin"
     auditor_group: str = "onlumis-auditor"
@@ -34,6 +37,10 @@ class Settings(BaseSettings):
     context_chunks: int = 8         # Chunks im LLM-Kontext
     rrf_k: int = 60                 # RRF-Konstante
     max_snippet_chars: int = 240
+    # Konfidenz-Schwelle für Reranker-Scores (0 = aus; empfohlen ~0.2).
+    # Greift nur bei aktivem Reranker; ohne Treffer antwortet das System
+    # ehrlich statt zu raten (NO_CONTEXT_ANSWER).
+    min_rerank_score: float = 0.0
 
     # Generierung
     answer_max_tokens: int = 1024
@@ -46,6 +53,19 @@ class Settings(BaseSettings):
 
     # Audit: false = Fragen nur als SHA-256-Hash protokollieren (Datenschutz-Default)
     audit_log_questions: bool = False
+
+    # Aufbewahrung in Tagen, 0 = unbegrenzt (Quick Win / DSGVO)
+    retention_days_conversations: int = 0
+    retention_days_audit: int = 0
+
+    # Upload-Portal: Zielverzeichnis (wird als Quelle "uploads" indexiert)
+    uploads_dir: str = "/data/uploads"
+
+    # Spracheingabe/Transkription (lokales Whisper via vLLM); leer = deaktiviert
+    transcribe_base_url: str = ""
+    transcribe_model: str = "whisper"
+    transcribe_language: str = "de"
+    transcribe_max_bytes: int = 25 * 1024 * 1024
 
 
 settings = Settings()

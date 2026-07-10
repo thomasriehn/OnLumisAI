@@ -73,12 +73,14 @@ async def api_client(test_dsn, monkeypatch):
     monkeypatch.setattr(api_settings, "database_url", test_dsn)
     await api_db.init_pool()
     app.state.gateway = FakeGateway()
+    app.state.http = httpx.AsyncClient()  # Lifespan läuft unter ASGI-Transport nicht
     transport = httpx.ASGITransport(app=app)
     try:
         async with httpx.AsyncClient(transport=transport, base_url="http://t") as client:
             await seed_knowledge(api_db.pool())
             yield client
     finally:
+        await app.state.http.aclose()
         await api_db.close_pool()
 
 

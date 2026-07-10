@@ -1,12 +1,11 @@
 import { API_BASE_URL, upstreamHeaders } from "@/lib/upstream";
 
-// Streaming-Proxy: reicht den SSE-Stream des Orchestrators 1:1 an den
-// Browser weiter (Route Handler, nicht gecacht – POST ist immer dynamisch).
+// Streaming-Proxy: reicht den SSE-Stream des Orchestrators 1:1 an den Browser weiter.
 export async function POST(request: Request) {
   const body = await request.json();
   const upstream = await fetch(`${API_BASE_URL}/v1/chat/completions`, {
     method: "POST",
-    headers: upstreamHeaders(request),
+    headers: await upstreamHeaders(),
     body: JSON.stringify({ ...body, stream: true }),
   });
 

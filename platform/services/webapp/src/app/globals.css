@@ -54,6 +54,112 @@ body {
   padding: 0 16px;
 }
 
+.shell.wide {
+  max-width: 1180px;
+}
+
+.chat-layout {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 760px) {
+  .chat-layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+}
+
+.chat-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 0;
+  border-right: 1px solid var(--border);
+  padding-right: 12px;
+  overflow-y: auto;
+}
+
+.conv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.conv {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
+
+.conv:hover,
+.conv.active {
+  background: var(--surface-alt);
+}
+
+.conv-title {
+  flex: 1;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.83rem;
+  padding: 7px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conv.active .conv-title {
+  color: var(--accent-ink);
+}
+
+.conv-delete {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px 8px;
+  visibility: hidden;
+}
+
+.conv:hover .conv-delete {
+  visibility: visible;
+}
+
+.mic {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 0 14px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.mic.recording {
+  border-color: var(--danger);
+  color: var(--danger);
+  animation: blink 1.2s step-end infinite;
+}
+
+.mic:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
 .topbar {
   display: flex;
   align-items: center;
@@ -102,6 +208,15 @@ body {
 .tab.active {
   color: var(--accent-ink);
   border-color: var(--accent);
+}
+
+.session {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-left: 8px;
 }
 
 .messages {
@@ -207,6 +322,17 @@ body {
   color: var(--accent-ink);
   font-weight: 600;
   margin-right: 6px;
+}
+
+.citation a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 2px;
+}
+
+.citation a:hover {
+  color: var(--accent-ink);
 }
 
 .citation .path {

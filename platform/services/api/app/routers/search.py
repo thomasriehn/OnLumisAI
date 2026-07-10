@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, Request
 
-from .. import audit, db
+from .. import audit, db, gaps
 from ..auth import User, ensure_scope
 from ..config import settings
 from ..rate import rate_limited_user
@@ -20,6 +20,8 @@ async def search(
     gateway = request.app.state.gateway
     async with db.pool().acquire() as conn:
         chunks = await retrieve(gateway, conn, req.query, user.groups, top_k=req.top_k)
+        if not chunks:
+            await gaps.log_gap(conn, req.query, user)
         await audit.log_event(
             conn,
             user.username,

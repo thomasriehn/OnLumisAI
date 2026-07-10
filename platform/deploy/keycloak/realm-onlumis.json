@@ -21,7 +21,7 @@
       "publicClient": true,
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
-      "redirectUris": ["https://*", "http://localhost:3000/*"],
+      "redirectUris": ["https://*", "http://localhost:*", "http://127.0.0.1:*"],
       "webOrigins": ["+"],
       "protocolMappers": [
         {

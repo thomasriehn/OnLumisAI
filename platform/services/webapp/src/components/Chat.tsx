@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { MicButton } from "@/components/MicButton";
 import { TopBar } from "@/components/TopBar";
 
 type Citation = {
@@ -10,6 +11,7 @@ type Citation = {
   page: number | null;
   heading_path: string | null;
   snippet: string;
+  document_id: string;
   used: boolean;
 };
 
@@ -22,6 +24,8 @@ type Message = {
   pending?: boolean;
 };
 
+type ConversationRef = { id: string; title: string | null; created_at: string };
+
 const EXAMPLES = [
   "Wie viele Urlaubstage habe ich pro Jahr?",
   "Was tun, wenn die Presse P-300 keinen Druck aufbaut?",
@@ -32,7 +36,11 @@ const EXAMPLES = [
 async function readStream(
   response: Response,
   onDelta: (text: string) => void,
-  onFinal: (data: { citations?: Citation[]; conversation_id?: string; message_id?: string }) => void,
+  onFinal: (data: {
+    citations?: Citation[];
+    conversation_id?: string;
+    message_id?: string;
+  }) => void,
 ) {
   const reader = response.body!.getReader();
   const decoder = new TextDecoder();
@@ -66,15 +74,59 @@ async function readStream(
 
 export function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [conversations, setConversations] = useState<ConversationRef[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const conversationId = useRef<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const loadConversations = useCallback(async () => {
+    try {
+      const r = await fetch("/bff/conversations");
+      if (r.ok) setConversations(await r.json());
+    } catch {
+      /* Sidebar ist optional */
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadConversations();
+  }, [loadConversations]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [messages]);
+
+  async function openConversation(id: string) {
+    const r = await fetch(`/bff/conversations/${id}`);
+    if (!r.ok) return;
+    const data = await r.json();
+    setMessages(
+      data.messages.map(
+        (m: { id: string; role: "user" | "assistant"; content: string; citations: Citation[] }) => ({
+          role: m.role,
+          content: m.content,
+          citations: (m.citations ?? []).filter((c) => c.used),
+          messageId: m.role === "assistant" ? m.id : undefined,
+        }),
+      ),
+    );
+    setActiveId(id);
+    setError(null);
+  }
+
+  async function removeConversation(id: string) {
+    await fetch(`/bff/conversations/${id}`, { method: "DELETE" }).catch(() => undefined);
+    if (id === activeId) startNew();
+    void loadConversations();
+  }
+
+  function startNew() {
+    setMessages([]);
+    setActiveId(null);
+    setError(null);
+  }
 
   async function send(question: string) {
     const trimmed = question.trim();
@@ -102,14 +154,18 @@ export function Chat() {
       });
 
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch("/bff/chat", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           messages: [...history, { role: "user", content: trimmed }],
-          metadata: { persist: true, conversation_id: conversationId.current },
+          metadata: { persist: true, conversation_id: activeId },
         }),
       });
+      if (response.status === 401) {
+        window.location.href = "/bff/auth/login";
+        return;
+      }
       if (!response.ok || !response.body) {
         const detail = await response.json().catch(() => null);
         throw new Error(detail?.error ?? `Fehler ${response.status}`);
@@ -118,7 +174,7 @@ export function Chat() {
         response,
         (delta) => updateLast((m) => ({ content: m.content + delta })),
         (final) => {
-          if (final.conversation_id) conversationId.current = final.conversation_id;
+          if (final.conversation_id) setActiveId(final.conversation_id);
           updateLast({
             citations: (final.citations ?? []).filter((c) => c.used),
             messageId: final.message_id,
@@ -126,6 +182,7 @@ export function Chat() {
         },
       );
       updateLast({ pending: false });
+      void loadConversations();
     } catch (err) {
       setMessages((prev) => prev.filter((m) => !(m.pending && !m.content)));
       setError(err instanceof Error ? err.message : "Unbekannter Fehler");
@@ -140,7 +197,7 @@ export function Chat() {
     setMessages((prev) =>
       prev.map((m, i) => (i === index ? { ...m, feedback: rating } : m)),
     );
-    await fetch("/api/feedback", {
+    await fetch("/bff/feedback", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ message_id: message.messageId, rating }),
@@ -148,63 +205,96 @@ export function Chat() {
   }
 
   return (
-    <div className="shell">
+    <div className="shell wide">
       <TopBar active="chat" />
-
-      <div className="messages" ref={scrollRef}>
-        {messages.length === 0 ? (
-          <div className="empty">
-            <h1>Fragen Sie Ihr Unternehmenswissen</h1>
-            <p>
-              Antworten kommen ausschließlich aus den freigegebenen internen
-              Dokumenten – mit Quellenangabe zum Ursprungsdokument.
-            </p>
-            <div className="examples">
-              {EXAMPLES.map((example) => (
-                <button key={example} onClick={() => send(example)} disabled={busy}>
-                  {example}
+      <div className="chat-layout">
+        <aside className="sidebar">
+          <button className="small" onClick={startNew}>
+            + Neue Unterhaltung
+          </button>
+          <div className="conv-list">
+            {conversations.map((conversation) => (
+              <div
+                key={conversation.id}
+                className={`conv${conversation.id === activeId ? " active" : ""}`}
+              >
+                <button
+                  className="conv-title"
+                  onClick={() => void openConversation(conversation.id)}
+                  title={new Date(conversation.created_at).toLocaleString("de-DE")}
+                >
+                  {conversation.title ?? "(ohne Titel)"}
                 </button>
-              ))}
-            </div>
+                <button
+                  className="conv-delete"
+                  aria-label="Unterhaltung löschen"
+                  onClick={() => void removeConversation(conversation.id)}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
           </div>
-        ) : (
-          messages.map((message, index) => (
-            <MessageView
-              key={index}
-              message={message}
-              onFeedback={(rating) => sendFeedback(index, rating)}
-            />
-          ))
-        )}
-        {error && <div className="error">⚠ {error}</div>}
-      </div>
+        </aside>
 
-      <form
-        className="composer"
-        onSubmit={(event) => {
-          event.preventDefault();
-          send(input);
-        }}
-      >
-        <textarea
-          value={input}
-          placeholder="Frage an das Unternehmenswissen …"
-          onChange={(event) => setInput(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && !event.shiftKey) {
+        <div className="chat-main">
+          <div className="messages" ref={scrollRef}>
+            {messages.length === 0 ? (
+              <div className="empty">
+                <h1>Fragen Sie Ihr Unternehmenswissen</h1>
+                <p>
+                  Antworten kommen ausschließlich aus den freigegebenen internen
+                  Dokumenten – mit Quellenangabe zum Ursprungsdokument.
+                </p>
+                <div className="examples">
+                  {EXAMPLES.map((example) => (
+                    <button key={example} onClick={() => send(example)} disabled={busy}>
+                      {example}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              messages.map((message, index) => (
+                <MessageView
+                  key={index}
+                  message={message}
+                  onFeedback={(rating) => sendFeedback(index, rating)}
+                />
+              ))
+            )}
+            {error && <div className="error">⚠ {error}</div>}
+          </div>
+
+          <form
+            className="composer"
+            onSubmit={(event) => {
               event.preventDefault();
               send(input);
-            }
-          }}
-          rows={2}
-        />
-        <button type="submit" disabled={busy || !input.trim()}>
-          Senden
-        </button>
-      </form>
-      <div className="hint">
-        Antworten basieren auf indexierten Unternehmensdokumenten und können
-        unvollständig sein – Quellen prüfen.
+            }}
+          >
+            <textarea
+              value={input}
+              placeholder="Frage an das Unternehmenswissen …"
+              onChange={(event) => setInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && !event.shiftKey) {
+                  event.preventDefault();
+                  send(input);
+                }
+              }}
+              rows={2}
+            />
+            <MicButton onText={(text) => setInput((prev) => (prev ? prev + " " : "") + text)} />
+            <button type="submit" disabled={busy || !input.trim()}>
+              Senden
+            </button>
+          </form>
+          <div className="hint">
+            Antworten basieren auf indexierten Unternehmensdokumenten und können
+            unvollständig sein – Quellen prüfen.
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -234,10 +324,16 @@ function MessageView({
           {citations.map((citation) => (
             <div className="citation" key={citation.n}>
               <span className="n">[{citation.n}]</span>
-              {citation.title ?? citation.uri}
+              <a
+                href={`/bff/documents/${citation.document_id}/content`}
+                target="_blank"
+                rel="noreferrer"
+                title={citation.uri}
+              >
+                {citation.title ?? citation.uri}
+              </a>
               {citation.page != null && ` · Seite ${citation.page}`}
               {citation.heading_path && ` · ${citation.heading_path}`}
-              <span className="path">{citation.uri}</span>
             </div>
           ))}
         </details>

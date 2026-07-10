@@ -50,3 +50,27 @@ def parse_with_ocr(path: Path) -> ParsedDocument:
         return parsed
     logger.info("OCR angewendet: %s (%d Blöcke)", path.name, len(blocks))
     return ParsedDocument(title=parsed.title, blocks=blocks)
+
+
+_DOCLING_SUFFIXES = {".pdf", ".docx", ".html", ".htm"}
+
+
+def parse_document(path: Path) -> ParsedDocument:
+    """Zentraler Parsing-Einstieg der Ingestion: wählt das Backend.
+
+    PARSING_BACKEND=docling nutzt Docling (Layout/Tabellen) für geeignete
+    Formate und fällt bei Fehlern auf das einfache Backend (inkl. OCR) zurück.
+    """
+    if (
+        settings.parsing_backend == "docling"
+        and path.suffix.lower() in _DOCLING_SUFFIXES
+    ):
+        from . import docling_backend
+
+        try:
+            return docling_backend.parse_with_docling(path)
+        except docling_backend.DoclingUnavailable as exc:
+            logger.warning("Docling nicht verfügbar (%s) – Fallback simple", exc)
+        except Exception:  # noqa: BLE001 - Fallback statt Ausfall
+            logger.exception("Docling-Fehler bei %s – Fallback simple", path.name)
+    return parse_with_ocr(path)

@@ -10,9 +10,10 @@ import asyncpg
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
-from .. import audit, db
+from .. import audit, db, gaps, profiles
 from ..auth import User, ensure_scope, get_current_user
 from ..config import settings
+from ..rag import NO_CONTEXT_ANSWER
 from ..rate import rate_limited_user
 from ..llm import ModelGateway
 from ..rag import build_messages, mark_used_citations, rewrite_query
@@ -102,10 +103,19 @@ async def answers(
             history = await _history(conn, req.conversation_id)
         retrieval_query = await rewrite_query(gateway, history, req.question)
         chunks = await retrieve(gateway, conn, retrieval_query, user.groups, top_k=req.top_k)
+        extra_instructions = await profiles.instructions_for(conn, user.groups)
+        if not chunks:
+            await gaps.log_gap(conn, req.question, user)
 
-    messages, citations = build_messages(req.question, chunks, history)
-    answer = await gateway.chat(messages)
-    citations = mark_used_citations(answer, citations)
+    if not chunks:
+        # Konfidenz-Kurzschluss: ehrlich statt raten, LLM wird nicht bemüht
+        answer, citations = NO_CONTEXT_ANSWER, []
+    else:
+        messages, citations = build_messages(
+            req.question, chunks, history, extra_instructions
+        )
+        answer = await gateway.chat(messages)
+        citations = mark_used_citations(answer, citations)
 
     async with db.pool().acquire() as conn:
         conversation_id, message_id = await _persist_exchange(
@@ -169,6 +179,8 @@ async def chat_completions(
 
     chunks: list[RetrievedChunk] = []
     citations: list[dict] = []
+    precomputed_answer: str | None = None
+    messages: list[dict] = []
     if rag_enabled:
         history = [
             m.model_dump() for m in req.messages[:-1] if m.role in ("user", "assistant")
@@ -176,7 +188,14 @@ async def chat_completions(
         retrieval_query = await rewrite_query(gateway, history, last_user.content)
         async with db.pool().acquire() as conn:
             chunks = await retrieve(gateway, conn, retrieval_query, user.groups)
-        messages, citations = build_messages(last_user.content, chunks, history)
+            extra_instructions = await profiles.instructions_for(conn, user.groups)
+            if not chunks:
+                await gaps.log_gap(conn, last_user.content, user)
+                precomputed_answer = NO_CONTEXT_ANSWER
+        if precomputed_answer is None:
+            messages, citations = build_messages(
+                last_user.content, chunks, history, extra_instructions
+            )
     else:
         messages = [m.model_dump() for m in req.messages]
 
@@ -208,7 +227,7 @@ async def chat_completions(
         return {"conversation_id": str(cid), "message_id": str(mid)}
 
     if not req.stream:
-        answer = await gateway.chat(messages, **overrides)
+        answer = precomputed_answer or await gateway.chat(messages, **overrides)
         citations = mark_used_citations(answer, citations)
         ids = await _maybe_persist(answer, citations)
         await _audit(
@@ -240,9 +259,13 @@ async def chat_completions(
 
         yield _sse(chunk_payload({"role": "assistant"}))
         collected: list[str] = []
-        async for delta in gateway.chat_stream(messages, **overrides):
-            collected.append(delta)
-            yield _sse(chunk_payload({"content": delta}))
+        if precomputed_answer is not None:
+            collected.append(precomputed_answer)
+            yield _sse(chunk_payload({"content": precomputed_answer}))
+        else:
+            async for delta in gateway.chat_stream(messages, **overrides):
+                collected.append(delta)
+                yield _sse(chunk_payload({"content": delta}))
         yield _sse(chunk_payload({}, finish="stop"))
 
         answer = "".join(collected)
@@ -272,6 +295,20 @@ async def list_conversations(user: User = Depends(get_current_user)) -> list[dic
         {"id": str(r["id"]), "title": r["title"], "created_at": r["created_at"].isoformat()}
         for r in rows
     ]
+
+
+@router.delete("/conversations/{conversation_id}", status_code=204)
+async def delete_conversation(
+    conversation_id: UUID, user: User = Depends(get_current_user)
+) -> None:
+    async with db.pool().acquire() as conn:
+        await _load_owned_conversation(conn, conversation_id, user)
+        await conn.execute(
+            "DELETE FROM app.conversations WHERE id = $1", conversation_id
+        )
+        await audit.log_event(
+            conn, user.username, "conversation_deleted", conversation_id=conversation_id
+        )
 
 
 @router.get("/conversations/{conversation_id}")

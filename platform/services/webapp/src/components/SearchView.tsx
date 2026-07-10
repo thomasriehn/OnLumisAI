@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MicButton } from "@/components/MicButton";
 import { TopBar } from "@/components/TopBar";
 
 type Result = {
@@ -10,6 +11,7 @@ type Result = {
   heading_path: string | null;
   snippet: string;
   score: number;
+  document_id: string;
 };
 
 export function SearchView() {
@@ -24,7 +26,7 @@ export function SearchView() {
     setBusy(true);
     setError(null);
     try {
-      const response = await fetch("/api/search", {
+      const response = await fetch("/bff/search", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ query: query.trim(), top_k: 10 }),
@@ -55,6 +57,7 @@ export function SearchView() {
               }
             }}
           />
+          <MicButton onText={(text) => setQuery((prev) => (prev ? prev + " " : "") + text)} />
           <button type="submit" disabled={busy || !query.trim()}>
             Suchen
           </button>
@@ -68,7 +71,14 @@ export function SearchView() {
         {results?.map((result, index) => (
           <div className="citation" key={index} style={{ maxWidth: "100%" }}>
             <span className="n">{index + 1}.</span>
-            <strong>{result.title ?? result.uri}</strong>
+            <a
+              href={`/bff/documents/${result.document_id}/content`}
+              target="_blank"
+              rel="noreferrer"
+              title={result.uri}
+            >
+              <strong>{result.title ?? result.uri}</strong>
+            </a>
             {result.page != null && ` · Seite ${result.page}`}
             {result.heading_path && ` · ${result.heading_path}`}
             <p style={{ margin: "6px 0" }}>{result.snippet}…</p>

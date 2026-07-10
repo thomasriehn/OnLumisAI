@@ -43,6 +43,9 @@ services:
     environment:
       API_BASE_URL: http://api:8000
       AUTH_MODE: ${AUTH_MODE:-dev}
+      OIDC_ISSUER_URL: ${OIDC_ISSUER_URL:-https://${ONLUMIS_DOMAIN:-localhost}/auth/realms/onlumis}
+      OIDC_INTERNAL_URL: http://keycloak:8080/auth/realms/onlumis
+      OIDC_CLIENT_ID: onlumis-webapp
     networks: [edge, app]
     depends_on: [api]
 
@@ -53,6 +56,7 @@ services:
       DATABASE_URL: postgresql://onlumis:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD in .env setzen}@postgres:5432/onlumis
       AUTH_MODE: ${AUTH_MODE:-dev}
       OIDC_ISSUER_URL: ${OIDC_ISSUER_URL:-https://${ONLUMIS_DOMAIN:-localhost}/auth/realms/onlumis}
+      OIDC_INTERNAL_URL: http://keycloak:8080/auth/realms/onlumis
       CHAT_BASE_URL: ${CHAT_BASE_URL:-http://vllm-chat:8001/v1}
       CHAT_MODEL: ${CHAT_MODEL_NAME:-chat}
       EMBEDDINGS_BASE_URL: ${EMBEDDINGS_BASE_URL:-http://vllm-embed:8002/v1}
@@ -60,6 +64,13 @@ services:
       RERANK_BASE_URL: ${RERANK_BASE_URL:-http://vllm-rerank:8003}
       RERANK_MODEL: ${RERANK_MODEL_NAME:-rerank}
       AUDIT_LOG_QUESTIONS: ${AUDIT_LOG_QUESTIONS:-false}
+      RETENTION_DAYS_CONVERSATIONS: ${RETENTION_DAYS_CONVERSATIONS:-0}
+      RETENTION_DAYS_AUDIT: ${RETENTION_DAYS_AUDIT:-0}
+      MIN_RERANK_SCORE: ${MIN_RERANK_SCORE:-0.2}
+      TRANSCRIBE_BASE_URL: ${TRANSCRIBE_BASE_URL:-http://vllm-whisper:8005/v1}
+    volumes:
+      - ${SOURCES_PATH:-./data/sources}:/data/sources:ro
+      - uploads:/data/uploads
     networks: [edge, app, data, ml]
     depends_on:
       postgres:
@@ -77,8 +88,11 @@ services:
       EMBEDDINGS_MODEL: ${EMBED_MODEL_NAME:-embed}
       RUN_MODE: loop
       SYNC_INTERVAL_SECONDS: ${SYNC_INTERVAL_SECONDS:-900}
+      PARSING_BACKEND: ${PARSING_BACKEND:-simple}
+      TRANSCRIBE_BASE_URL: ${TRANSCRIBE_BASE_URL:-http://vllm-whisper:8005/v1}
     volumes:
       - ${SOURCES_PATH:-./data/sources}:/data/sources:ro
+      - uploads:/data/uploads:ro
     networks: [app, data, ml]
     depends_on:
       postgres:
@@ -184,6 +198,22 @@ services:
       - hf-cache:/root/.cache/huggingface
     networks: [ml]
 
+  vllm-whisper:
+    image: ${VLLM_IMAGE:-nvcr.io/nvidia/vllm:latest}
+    <<: [*restart, *gpu]
+    profiles: [models]
+    command: >
+      vllm serve ${WHISPER_MODEL_ID:-openai/whisper-large-v3-turbo}
+      --served-model-name whisper
+      --host 0.0.0.0 --port 8005
+      --task transcription
+      --gpu-memory-utilization ${WHISPER_GPU_MEM_FRACTION:-0.06}
+    environment:
+      HF_HUB_OFFLINE: ${HF_HUB_OFFLINE:-0}
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+    networks: [ml]
+
   # ------------------------------------------------------------- Monitoring
   # Nur mit --profile monitoring.
 
@@ -220,5 +250,6 @@ volumes:
   caddy-data:
   caddy-config:
   hf-cache:
+  uploads:
   prom-data:
   grafana-data:

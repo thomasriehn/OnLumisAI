@@ -4,11 +4,15 @@ Alle Endpunkte erfordern die Gruppe aus ADMIN_GROUP (Default: onlumis-admin).
 """
 
 import json
+import re
 import secrets
+from pathlib import Path
 from uuid import UUID
 
 import asyncpg
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
+
+from ..config import settings
 
 from .. import audit, db
 from ..auth import API_KEY_PREFIX, User, hash_api_key, require_admin
@@ -185,6 +189,50 @@ async def delete_api_key(key_id: UUID, user: User = Depends(require_admin)) -> N
         await audit.log_event(
             conn, user.username, "admin:apikey_deleted", meta={"id": str(key_id)}
         )
+
+
+_FILENAME_SAFE = re.compile(r"[^A-Za-z0-9äöüÄÖÜß._ -]+")
+
+
+@router.post("/uploads", status_code=201)
+async def upload_documents(
+    files: list[UploadFile], user: User = Depends(require_admin)
+) -> dict:
+    """Upload-Portal (Quick Win): Dateien landen in der Quelle "uploads" und
+    werden beim nächsten Sync-Lauf indexiert (Sichtbarkeit gemäß Quell-ACL,
+    Default all-users – im Admin-Portal änderbar)."""
+    uploads_dir = Path(settings.uploads_dir)
+    uploads_dir.mkdir(parents=True, exist_ok=True)
+
+    async with db.pool().acquire() as conn:
+        await conn.execute(
+            """
+            INSERT INTO knowledge.sources (kind, name, config, default_acl)
+            VALUES ('filesystem', 'uploads', $1::jsonb, '{all-users}')
+            ON CONFLICT (name) DO NOTHING
+            """,
+            json.dumps({"root_path": str(uploads_dir)}),
+        )
+
+    saved: list[str] = []
+    for upload in files:
+        name = _FILENAME_SAFE.sub("_", Path(upload.filename or "datei").name)
+        target = uploads_dir / name
+        counter = 1
+        while target.exists():
+            target = uploads_dir / f"{target.stem.rstrip('-0123456789') or 'datei'}-{counter}{target.suffix}"
+            counter += 1
+        target.write_bytes(await upload.read())
+        saved.append(target.name)
+
+    async with db.pool().acquire() as conn:
+        await audit.log_event(
+            conn, user.username, "admin:upload", meta={"files": saved}
+        )
+    return {
+        "saved": saved,
+        "hint": "Indexierung erfolgt mit dem nächsten Sync-Lauf der Quelle 'uploads'.",
+    }
 
 
 @router.get("/stats", response_model=StatsOut)

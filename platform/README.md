@@ -15,12 +15,12 @@ FastAPI-Orchestrator und Next.js-Chat-UI.
 | Dienst | Technologie | Aufgabe |
 |---|---|---|
 | `proxy` | Caddy | TLS-Terminierung, einziger exponierter Port (443) |
-| `webapp` | Next.js 16 | Chat (Streaming, Quellen, Feedback), Intranet-Suche (`/suche`), Admin-Portal (`/admin`) |
-| `api` | FastAPI | RAG-Orchestrator: Auth (OIDC/API-Keys), Hybrid-Retrieval (RRF) + Reranking, Query-Rewriting, Zitate, Audit, Rate-Limit, Eval-Harness, **MCP-Server** (`/api/mcp`) |
-| `ingestion` | Python-Worker | Konnektoren (Dateisystem, Confluence, SharePoint, IMAP), Parsing (MD/TXT/HTML/PDF/DOCX, OCR-Fallback), Chunking, Embeddings, Delta-Sync + Tombstones |
+| `webapp` | Next.js 16 | **OIDC-Login (PKCE, httpOnly-Cookies)**, Chat mit Konversations-Sidebar, Spracheingabe (Mikrofon), klickbaren Quellen; Intranet-Suche (`/suche`); Admin-Portal (`/admin`: Quellen, Upload, Feedback, Evals, Wissenslücken). BFF-Routen unter `/bff/*` |
+| `api` | FastAPI | RAG-Orchestrator: Auth (OIDC/API-Keys), Hybrid-Retrieval (RRF) + Reranking mit **Konfidenz-Schwelle**, Query-Rewriting, **Prompt-Profile je Gruppe**, Zitate, Quellen-Viewer, Audit + **Retention**, Rate-Limit, Eval-Harness, **Wissenslücken-Report**, Transkription, **MCP-Server** (`/api/mcp`: search, answer, draft) |
+| `ingestion` | Python-Worker | Konnektoren (Dateisystem, Confluence, SharePoint, IMAP, **Jira, WebDAV/DMS, Google Drive**), Parsing (simple/**Docling**, OCR-Fallback), **Audio-Transkription**, Chunking, Embeddings, Delta-Sync + Tombstones |
 | `postgres` | pgvector/pg17 | Wissensbasis (Chunks, Embeddings, ACLs), App-Daten, Audit-Log, Eval-Daten |
 | `keycloak` | Keycloak 26 | OIDC mit Realm-Import (`deploy/keycloak/`); AD/LDAP-Federation im Realm konfigurierbar |
-| `vllm-chat/-embed/-rerank` | NGC vLLM | Modell-Serving auf der Spark (`--profile models`) |
+| `vllm-chat/-embed/-rerank/-whisper` | NGC vLLM | Modell-Serving auf der Spark (`--profile models`) |
 | `redis` | Redis 7 | Queue/Cache (Jobqueue-Ausbau bei Parallel-Syncs) |
 | `prometheus`/`grafana` | – | Monitoring (`--profile monitoring`) |
 
@@ -101,7 +101,12 @@ Hybrid-Suche (Vektor + Volltext + RRF) → **ACL-Negativtests** → Tombstones.
 | Phase 5 Feedback-Kuratierung + JSONL-Export | ✅ umgesetzt + getestet |
 | Phase 5 LoRA-Pipeline (`finetune/`: Dataset-Builder, QLoRA-Training, Synth-QA, Rollout mit Eval-Gate) | ✅ Skripte + getesteter Dataset-Builder; Trainingslauf braucht Spark-GPU |
 | OCR-Fallback für Scans (Tesseract, Build-Arg `WITH_OCR=1`) | ✅ Wiring + Tests; Tesseract-Lauf auf Zielsystem |
-| Docling-Parsing-Backend (Tabellen/Layout) | ⬜ dockt an `parsing.py`-Schnittstelle an |
+| **Login** OIDC in der Webapp (PKCE, httpOnly-Cookies, Refresh, Logout) | ✅ E2E im Browser gegen echtes Keycloak verifiziert |
+| **Quick Wins** Konversations-Sidebar (+Löschen), Quellen-Viewer (ACL + Traversal-Schutz), Upload-Portal, Retention-Job | ✅ umgesetzt + getestet (HTTP + Browser) |
+| **Qualität** Konfidenz-Schwelle/No-Hit-Kurzschluss, Prompt-Profile je Gruppe, Docling-Backend (`PARSING_BACKEND=docling`, `.[docling]`) | ✅ umgesetzt + getestet |
+| **Abdeckung** Jira-, WebDAV-(DMS)-, Google-Drive-Konnektor; Whisper-Service, Audio-Ingestion | ✅ Mock-/Integrationstests; echte Systeme beim Piloten |
+| **Spracheingabe** Mikrofon in Chat/Suche → lokales Whisper (`/v1/transcriptions`) | ✅ UI + Endpoint getestet; Whisper-Modell läuft auf der Spark |
+| **Strategisch** Wissenslücken-Report (Zero-Hit-Fragen, pseudonymisiert) + MCP-Tool `draft_text` | ✅ umgesetzt + getestet |
 | **Phase 6** Lasttest, Backup-Runbooks, Air-Gap-Bundle, Pilot | ⬜ Deployment-Phase (auf der Ziel-Hardware) |
 
 ## Struktur

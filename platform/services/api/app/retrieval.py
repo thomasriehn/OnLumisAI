@@ -127,6 +127,10 @@ async def retrieve(
 
     result = []
     for idx, score in ranked:
+        # Konfidenz-Schwelle: schwache Treffer fliegen raus, lieber ehrlich
+        # "keine belastbare Quelle" als eine dünn belegte Antwort (§6.2).
+        if score < settings.min_rerank_score:
+            continue
         chunk = candidates[idx]
         chunk.score = score
         result.append(chunk)

@@ -140,6 +140,110 @@ async def get_eval_run(run_id: UUID, user: User = Depends(require_admin)) -> dic
     }
 
 
+# ------------------------------------------------------------ Prompt-Profile
+
+
+class PromptProfile(BaseModel):
+    group_name: str = Field(min_length=1, max_length=100)
+    instructions: str = Field(min_length=1, max_length=4000)
+
+
+@router.get("/prompt-profiles")
+async def list_prompt_profiles(user: User = Depends(require_admin)) -> list[dict]:
+    rows = await db.pool().fetch(
+        "SELECT group_name, instructions, updated_at FROM app.prompt_profiles "
+        "ORDER BY group_name"
+    )
+    return [
+        {
+            "group_name": r["group_name"],
+            "instructions": r["instructions"],
+            "updated_at": r["updated_at"].isoformat(),
+        }
+        for r in rows
+    ]
+
+
+@router.put("/prompt-profiles/{group_name}")
+async def upsert_prompt_profile(
+    group_name: str, req: PromptProfile, user: User = Depends(require_admin)
+) -> dict:
+    async with db.pool().acquire() as conn:
+        await conn.execute(
+            """
+            INSERT INTO app.prompt_profiles (group_name, instructions)
+            VALUES ($1, $2)
+            ON CONFLICT (group_name)
+                DO UPDATE SET instructions = EXCLUDED.instructions, updated_at = now()
+            """,
+            group_name,
+            req.instructions,
+        )
+        await audit.log_event(
+            conn, user.username, "admin:prompt_profile", meta={"group": group_name}
+        )
+    return {"group_name": group_name}
+
+
+@router.delete("/prompt-profiles/{group_name}", status_code=204)
+async def delete_prompt_profile(
+    group_name: str, user: User = Depends(require_admin)
+) -> None:
+    deleted = await db.pool().fetchval(
+        "DELETE FROM app.prompt_profiles WHERE group_name = $1 RETURNING group_name",
+        group_name,
+    )
+    if deleted is None:
+        raise HTTPException(status_code=404, detail="Profil nicht gefunden")
+
+
+# --------------------------------------------------- Wissenslücken-Report
+
+
+@router.get("/reports/knowledge-gaps")
+async def knowledge_gaps_report(
+    days: int = Query(default=30, ge=1, le=365),
+    limit: int = Query(default=100, ge=1, le=1000),
+    user: User = Depends(require_admin),
+) -> dict:
+    """Fragen ohne belastbare Quelle: zeigt, welches Wissen im Unternehmen
+    nachgefragt, aber nicht dokumentiert ist (Nutzer pseudonymisiert)."""
+    async with db.pool().acquire() as conn:
+        total = await conn.fetchval(
+            "SELECT count(*) FROM app.knowledge_gaps "
+            "WHERE created_at > now() - make_interval(days => $1)",
+            days,
+        )
+        top = await conn.fetch(
+            """
+            SELECT lower(trim(question)) AS question,
+                   count(*) AS occurrences,
+                   count(DISTINCT username_hash) AS distinct_users,
+                   max(created_at) AS last_seen
+            FROM app.knowledge_gaps
+            WHERE created_at > now() - make_interval(days => $1)
+            GROUP BY lower(trim(question))
+            ORDER BY occurrences DESC, last_seen DESC
+            LIMIT $2
+            """,
+            days,
+            limit,
+        )
+    return {
+        "days": days,
+        "total": total,
+        "gaps": [
+            {
+                "question": r["question"],
+                "occurrences": r["occurrences"],
+                "distinct_users": r["distinct_users"],
+                "last_seen": r["last_seen"].isoformat(),
+            }
+            for r in top
+        ],
+    }
+
+
 # ----------------------------------------------------------------- Feedback
 
 
