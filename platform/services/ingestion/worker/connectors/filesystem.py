@@ -5,12 +5,28 @@ scan() liefert alle aktuell existierenden Objekte; Change Detection läuft
 zweistufig über (mtime, size) und erst bei Abweichung über den Content-Hash.
 """
 
+import fnmatch
 import hashlib
 from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
 from ..parsing import SUPPORTED_EXTENSIONS
+
+
+def acl_for(relpath: str, rules: list[dict], default: list[str]) -> list[str]:
+    """Pfadregel-ACLs (AP 2.2): erste passende Regel gewinnt, sonst Default.
+
+    Regeln in sources.config: {"acl_rules": [{"pattern": "hr/*", "groups": ["hr"]}]}.
+    Muster sind fnmatch-Globs relativ zur Quellwurzel; '*' überspannt dabei auch
+    Verzeichnisgrenzen. Natives NTFS-/Quellrechte-Mapping bleibt Phase-2-Rest
+    und dockt an derselben Stelle an.
+    """
+    normalized = relpath.replace("\\", "/")
+    for rule in rules:
+        if fnmatch.fnmatch(normalized, rule.get("pattern", "")):
+            return list(rule.get("groups", default))
+    return list(default)
 
 _MIME_BY_SUFFIX = {
     ".md": "text/markdown",

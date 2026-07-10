@@ -12,6 +12,7 @@ dependencies = [
     "pydantic-settings>=2.2",
     "PyJWT[crypto]>=2.8",
     "prometheus-fastapi-instrumentator>=7.0",
+    "mcp>=1.10",
 ]
 
 [project.optional-dependencies]

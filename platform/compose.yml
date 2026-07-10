@@ -66,7 +66,10 @@ services:
         condition: service_healthy
 
   ingestion:
-    build: ./services/ingestion
+    build:
+      context: ./services/ingestion
+      args:
+        WITH_OCR: ${WITH_OCR:-0}
     <<: *restart
     environment:
       DATABASE_URL: postgresql://onlumis:${POSTGRES_PASSWORD:?}@postgres:5432/onlumis
@@ -112,6 +115,9 @@ services:
       - --http-enabled=true
       - --proxy-headers=xforwarded
       - --http-relative-path=/auth
+      - --import-realm
+    volumes:
+      - ./deploy/keycloak:/opt/keycloak/data/import:ro
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak

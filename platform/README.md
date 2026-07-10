@@ -15,13 +15,13 @@ FastAPI-Orchestrator und Next.js-Chat-UI.
 | Dienst | Technologie | Aufgabe |
 |---|---|---|
 | `proxy` | Caddy | TLS-Terminierung, einziger exponierter Port (443) |
-| `webapp` | Next.js 16 | Chat-UI mit Streaming, Quellen-Panel, Feedback |
-| `api` | FastAPI | RAG-Orchestrator: Auth, Hybrid-Retrieval (RRF) + Reranking, Zitate, Audit |
-| `ingestion` | Python-Worker | Dateisystem-Konnektor, Parsing (MD/TXT/HTML/PDF/DOCX), Chunking, Embeddings, Delta-Sync + Tombstones |
-| `postgres` | pgvector/pg17 | Wissensbasis (Chunks, Embeddings, ACLs), App-Daten, Audit-Log |
-| `keycloak` | Keycloak 26 | OIDC; AD/LDAP-Federation folgt in Phase 2 |
+| `webapp` | Next.js 16 | Chat (Streaming, Quellen, Feedback), Intranet-Suche (`/suche`), Admin-Portal (`/admin`) |
+| `api` | FastAPI | RAG-Orchestrator: Auth (OIDC/API-Keys), Hybrid-Retrieval (RRF) + Reranking, Query-Rewriting, Zitate, Audit, Rate-Limit, Eval-Harness, **MCP-Server** (`/api/mcp`) |
+| `ingestion` | Python-Worker | Konnektoren (Dateisystem, Confluence, SharePoint, IMAP), Parsing (MD/TXT/HTML/PDF/DOCX, OCR-Fallback), Chunking, Embeddings, Delta-Sync + Tombstones |
+| `postgres` | pgvector/pg17 | Wissensbasis (Chunks, Embeddings, ACLs), App-Daten, Audit-Log, Eval-Daten |
+| `keycloak` | Keycloak 26 | OIDC mit Realm-Import (`deploy/keycloak/`); AD/LDAP-Federation im Realm konfigurierbar |
 | `vllm-chat/-embed/-rerank` | NGC vLLM | Modell-Serving auf der Spark (`--profile models`) |
-| `redis` | Redis 7 | Queue/Cache (Jobqueue-Ausbau in Phase 3) |
+| `redis` | Redis 7 | Queue/Cache (Jobqueue-Ausbau bei Parallel-Syncs) |
 | `prometheus`/`grafana` | – | Monitoring (`--profile monitoring`) |
 
 ## Quickstart auf der DGX Spark
@@ -41,9 +41,17 @@ docker compose exec ingestion python -m worker.main add-source \
 docker compose exec ingestion python -m worker.main once   # Erst-Sync sofort
 ```
 
-Danach: `https://<ONLUMIS_DOMAIN>/` (Chat), `/api/docs` (OpenAPI),
-`/auth` (Keycloak-Admin). Die mitgelieferten Beispieldokumente unter
+Danach: `https://<ONLUMIS_DOMAIN>/` (Chat), `/suche` (Intranet-Suche),
+`/admin` (Verwaltung), `/api/docs` (OpenAPI), `/api/mcp` (MCP-Endpoint für
+Agenten), `/auth` (Keycloak). Die Beispieldokumente unter
 `data/sources/beispiel/` machen das System sofort befragbar.
+
+**Keycloak:** Beim Erststart wird das Realm `onlumis` importiert
+(`deploy/keycloak/realm-onlumis.json`) – inkl. Gruppen (`all-users`,
+`onlumis-admin`, `onlumis-auditor`, …), Groups-Claim-Mapper und einem
+Demo-Nutzer `demo`/`demo`. **Vor Produktivbetrieb:** Demo-Nutzer entfernen,
+AD/LDAP-Federation im Realm einrichten (Keycloak-Admin → User Federation) und
+`AUTH_MODE=oidc` setzen.
 
 ## Entwicklung ohne GPU
 
@@ -77,19 +85,24 @@ Hybrid-Suche (Vektor + Volltext + RRF) → **ACL-Negativtests** → Tombstones.
 
 | Bereich | Stand |
 |---|---|
-| P0 Compose-Stack, Netze, TLS-Proxy, Secrets-Schema, Modell-Manifeste | ✅ umgesetzt |
-| AP 1.1 DB-Schema (knowledge/app/audit, HNSW+GIN, ACL-Arrays) | ✅ umgesetzt + getestet |
-| AP 1.2 Dateisystem-Konnektor (Change Detection 2-stufig, Tombstones) | ✅ umgesetzt + getestet |
-| AP 1.3 Parsing MD/TXT/HTML/PDF/DOCX | ✅ v1 (Docling/OCR-Backend folgt an gleicher Schnittstelle) |
-| AP 1.4 Chunking (Überschriften-Pfade, Seiten, Überlappung) | ✅ umgesetzt + getestet |
-| AP 1.5 Sync-Runner (`once`/`loop`, Status je Quelle) | ✅ v1 (Redis-Jobqueue folgt Phase 3) |
-| AP 1.6 RAG-API: /v1/answers, /v1/chat/completions (SSE), /v1/search, Feedback, Admin, Audit | ✅ umgesetzt + Smoke-Test Ende-zu-Ende |
-| AP 1.7 Chat-UI (Streaming, Quellen, Feedback, Verlauf clientseitig) | ✅ v1, `next build` verifiziert |
-| Reranker-Anbindung (vLLM /v1/rerank, abschaltbar) | ✅ umgesetzt (Wirkungs-A/B: AP 3.6) |
-| Hybrid-Suche (pgvector-HNSW + tsvector-`german` + RRF in einem SQL) | ✅ umgesetzt + getestet |
-| Dokument-ACLs im Retrieval (SQL-seitig) | ✅ umgesetzt + Negativtests |
-| OIDC-Validierung (Keycloak JWKS) | ✅ Code vorhanden; Realm-Setup + AD-Federation = Phase 2 |
-| OCR für Scans, weitere Konnektoren, MCP-Server, Teams, Eval-Harness, LoRA | ⬜ gemäß Plan Phase 2–5 |
+| **Phase 0** Compose-Stack, Netze, TLS-Proxy, Secrets-Schema, Modell-Manifeste | ✅ umgesetzt |
+| **Phase 1** DB-Schema, Dateisystem-Konnektor, Parsing, Chunking, Sync-Runner, RAG-API, Chat-UI | ✅ umgesetzt + getestet (Ende-zu-Ende inkl. Browser-Test) |
+| Hybrid-Suche (pgvector-HNSW + tsvector-`german` + RRF) & Reranker | ✅ umgesetzt + getestet |
+| **Phase 2** Dokument-ACLs (SQL-seitig) + Pfadregel-ACLs, ACL-Testsuite (HTTP-Ebene) | ✅ umgesetzt + Negativtests |
+| Phase 2 OIDC: Keycloak-Realm-Import (Groups-Mapper), JWKS-Validierung | ✅ E2E gegen echtes Keycloak verifiziert; AD-Federation = Realm-Konfiguration beim Kunden |
+| Phase 2 API-Keys (gehasht, Scopes, ACL-Gruppen), Rate-Limit, Audit-Export (JSON/CSV, Auditor-Rolle) | ✅ umgesetzt + getestet |
+| Phase 2 DSGVO-Paket (AVV/TOMs-Dokumente) | ⬜ juristische Vorlagen, kein Code |
+| **Phase 3** Konnektor-Framework (Version/ETag-Engine) + Confluence, SharePoint (Graph), IMAP | ✅ umgesetzt + Mock-/Integrationstests; Test gegen echte Systeme beim Piloten |
+| Phase 3 Query-Rewriting aus Konversationskontext | ✅ umgesetzt + getestet (abschaltbar) |
+| **Phase 4** MCP-Server (`search_knowledge`, `answer_with_sources`) | ✅ Roundtrip mit offiziellem MCP-Client inkl. ACL-Negativtest |
+| Phase 4 Admin-Portal (Quellen, Stats, Feedback-Queue, Evals) + Such-Seite | ✅ umgesetzt, Browser-getestet |
+| Phase 4 Teams-Bot | ⬜ bewusst offen: Hybrid-Feature, erfordert Azure-Bot-Registrierung des Kunden |
+| **Phase 5** Eval-Harness (goldene Fragen, Runs, Gate-Endpoint) | ✅ umgesetzt + getestet |
+| Phase 5 Feedback-Kuratierung + JSONL-Export | ✅ umgesetzt + getestet |
+| Phase 5 LoRA-Pipeline (`finetune/`: Dataset-Builder, QLoRA-Training, Synth-QA, Rollout mit Eval-Gate) | ✅ Skripte + getesteter Dataset-Builder; Trainingslauf braucht Spark-GPU |
+| OCR-Fallback für Scans (Tesseract, Build-Arg `WITH_OCR=1`) | ✅ Wiring + Tests; Tesseract-Lauf auf Zielsystem |
+| Docling-Parsing-Backend (Tabellen/Layout) | ⬜ dockt an `parsing.py`-Schnittstelle an |
+| **Phase 6** Lasttest, Backup-Runbooks, Air-Gap-Bundle, Pilot | ⬜ Deployment-Phase (auf der Ziel-Hardware) |
 
 ## Struktur
 
@@ -97,12 +110,13 @@ Hybrid-Suche (Vektor + Volltext + RRF) → **ACL-Negativtests** → Tombstones.
 platform/
   compose.yml / compose.dev.yml   Stack (Spark bzw. Dev ohne GPU)
   .env.example                    Konfiguration
-  db/init/                        Schema (pgvector, knowledge/app/audit)
-  deploy/                         Caddy, Prometheus, Grafana
+  db/init/                        Schema (pgvector, knowledge/app/audit/eval)
+  deploy/                         Caddy, Keycloak-Realm, Prometheus, Grafana
   models/                         Modell-Manifeste + Download (Air-Gap-fähig)
-  services/api/                   FastAPI RAG-Orchestrator
-  services/ingestion/             Konnektoren, Parsing, Chunking, Indexer
-  services/webapp/                Next.js-Chat (Streaming + Quellen)
+  services/api/                   FastAPI RAG-Orchestrator + MCP-Server
+  services/ingestion/             Konnektoren, Parsing/OCR, Chunking, Indexer
+  services/webapp/                Next.js: Chat, Suche, Admin-Portal
+  finetune/                       LoRA-Pipeline (Dataset, Training, Rollout-Gate)
   data/sources/beispiel/          Demo-Korpus für den Quickstart
-  tests/                          Ende-zu-Ende-Integrationstests
+  tests/                          Ende-zu-Ende- und HTTP-Integrationstests
 ```

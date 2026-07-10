@@ -42,8 +42,8 @@ async def test_dsn():
 
     dsn = ADMIN_DSN.rsplit("/", 1)[0] + f"/{dbname}"
     conn = await asyncpg.connect(dsn)
-    for sql_file in ("001_extensions.sql", "002_schema.sql"):
-        await conn.execute((PLATFORM_ROOT / "db" / "init" / sql_file).read_text())
+    for sql_file in sorted((PLATFORM_ROOT / "db" / "init").glob("*.sql")):
+        await conn.execute(sql_file.read_text())
     await conn.close()
 
     yield dsn
@@ -58,3 +58,61 @@ async def test_pool(test_dsn):
     pool = await asyncpg.create_pool(test_dsn, min_size=1, max_size=4)
     yield pool
     await pool.close()
+
+
+@pytest.fixture()
+async def api_client(test_dsn, monkeypatch):
+    """HTTP-Client gegen die echte FastAPI-App (ASGI) mit Test-DB + Fake-Modellen."""
+    import httpx
+
+    from app import db as api_db
+    from app.config import settings as api_settings
+    from app.main import app
+    from tests.fake_models import FakeGateway
+
+    monkeypatch.setattr(api_settings, "database_url", test_dsn)
+    await api_db.init_pool()
+    app.state.gateway = FakeGateway()
+    transport = httpx.ASGITransport(app=app)
+    try:
+        async with httpx.AsyncClient(transport=transport, base_url="http://t") as client:
+            await seed_knowledge(api_db.pool())
+            yield client
+    finally:
+        await api_db.close_pool()
+
+
+async def seed_knowledge(pool) -> None:
+    """Zwei Dokumente mit unterschiedlichen ACLs (hr / produktion)."""
+    from worker.chunking import Chunk
+    from worker.indexer import upsert_document
+
+    from tests.fake_models import fake_embedding
+
+    async with pool.acquire() as conn:
+        source_id = await conn.fetchval(
+            "INSERT INTO knowledge.sources (kind, name, config) "
+            "VALUES ('filesystem', 'seed', '{}') RETURNING id"
+        )
+        docs = [
+            ("hr/urlaub.md", ["hr"],
+             "Sonderurlaub bei Hochzeit: 1 Tag. Urlaubsanspruch 30 Tage.",
+             "Urlaubsrichtlinie › Sonderurlaub"),
+            ("prod/presse.md", ["produktion"],
+             "Presse Hydraulik: Wartung wöchentlich, Druck 190 bar.",
+             "Wartung › Presse"),
+        ]
+        for external_id, acl, content, heading in docs:
+            await upsert_document(
+                conn,
+                source_id=source_id,
+                external_id=external_id,
+                uri=f"file:///{external_id}",
+                title=external_id,
+                mime_type="text/markdown",
+                content_hash=external_id,
+                acl_groups=acl,
+                meta={},
+                chunks=[Chunk(index=0, content=content, heading_path=heading, page=None)],
+                embeddings=[fake_embedding(content)],
+            )

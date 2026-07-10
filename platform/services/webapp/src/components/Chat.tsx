@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { TopBar } from "@/components/TopBar";
 
 type Citation = {
   n: number;
@@ -148,11 +149,7 @@ export function Chat() {
 
   return (
     <div className="shell">
-      <header className="topbar">
-        <div className="logo-dot" aria-hidden />
-        <strong>OnLumis</strong>
-        <span>Ihr Unternehmenswissen. Lokal. Mit Quellen.</span>
-      </header>
+      <TopBar active="chat" />
 
       <div className="messages" ref={scrollRef}>
         {messages.length === 0 ? (

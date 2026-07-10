@@ -46,9 +46,22 @@ class FakeEmbedder:
 
 
 class FakeGateway(FakeEmbedder):
-    """Duck-typed Ersatz für app.llm.ModelGateway im Retrieval-Pfad."""
+    """Duck-typed Ersatz für app.llm.ModelGateway (Retrieval + Chat)."""
 
     rerank_enabled = False
 
+    def __init__(self, answer: str = "Laut Richtlinie gilt: ein Tag Sonderurlaub [1]."):
+        self.answer = answer
+        self.chat_calls: list[list[dict]] = []
+
     async def rerank(self, query, documents, top_n):
         return None  # wie "kein Reranker konfiguriert"
+
+    async def chat(self, messages, **overrides):
+        self.chat_calls.append(messages)
+        return self.answer
+
+    async def chat_stream(self, messages, **overrides):
+        self.chat_calls.append(messages)
+        for word in self.answer.split(" "):
+            yield word + " "

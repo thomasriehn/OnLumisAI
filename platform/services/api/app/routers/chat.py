@@ -11,10 +11,11 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
 from .. import audit, db
-from ..auth import User, get_current_user
+from ..auth import User, ensure_scope, get_current_user
 from ..config import settings
+from ..rate import rate_limited_user
 from ..llm import ModelGateway
-from ..rag import build_messages, mark_used_citations
+from ..rag import build_messages, mark_used_citations, rewrite_query
 from ..retrieval import RetrievedChunk, retrieve
 from ..schemas import AnswerRequest, AnswerResponse, ChatCompletionRequest, Citation
 
@@ -89,8 +90,9 @@ async def _persist_exchange(
 
 @router.post("/answers", response_model=AnswerResponse)
 async def answers(
-    req: AnswerRequest, request: Request, user: User = Depends(get_current_user)
+    req: AnswerRequest, request: Request, user: User = Depends(rate_limited_user)
 ) -> AnswerResponse:
+    ensure_scope(user, "chat")
     gateway = _gateway(request)
 
     async with db.pool().acquire() as conn:
@@ -98,7 +100,8 @@ async def answers(
         if req.conversation_id is not None:
             await _load_owned_conversation(conn, req.conversation_id, user)
             history = await _history(conn, req.conversation_id)
-        chunks = await retrieve(gateway, conn, req.question, user.groups, top_k=req.top_k)
+        retrieval_query = await rewrite_query(gateway, history, req.question)
+        chunks = await retrieve(gateway, conn, retrieval_query, user.groups, top_k=req.top_k)
 
     messages, citations = build_messages(req.question, chunks, history)
     answer = await gateway.chat(messages)
@@ -134,7 +137,7 @@ def _sse(obj: dict) -> str:
 
 @router.post("/chat/completions")
 async def chat_completions(
-    req: ChatCompletionRequest, request: Request, user: User = Depends(get_current_user)
+    req: ChatCompletionRequest, request: Request, user: User = Depends(rate_limited_user)
 ):
     """OpenAI-kompatibel; RAG ist standardmäßig aktiv (metadata: {"rag": false}
     deaktiviert es). Zitate kommen als zusätzliches SSE-Event
@@ -143,6 +146,7 @@ async def chat_completions(
     als Konversation gespeichert (liefert conversation_id/message_id für
     Feedback); metadata.conversation_id setzt eine bestehende fort.
     """
+    ensure_scope(user, "chat")
     gateway = _gateway(request)
     meta = req.metadata or {}
     rag_enabled = bool(meta.get("rag", True))
@@ -166,11 +170,12 @@ async def chat_completions(
     chunks: list[RetrievedChunk] = []
     citations: list[dict] = []
     if rag_enabled:
-        async with db.pool().acquire() as conn:
-            chunks = await retrieve(gateway, conn, last_user.content, user.groups)
         history = [
             m.model_dump() for m in req.messages[:-1] if m.role in ("user", "assistant")
         ]
+        retrieval_query = await rewrite_query(gateway, history, last_user.content)
+        async with db.pool().acquire() as conn:
+            chunks = await retrieve(gateway, conn, retrieval_query, user.groups)
         messages, citations = build_messages(last_user.content, chunks, history)
     else:
         messages = [m.model_dump() for m in req.messages]

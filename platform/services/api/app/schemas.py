@@ -88,7 +88,7 @@ class FeedbackRequest(BaseModel):
 
 class SourceCreate(BaseModel):
     name: str = Field(min_length=1, max_length=200)
-    kind: Literal["filesystem"] = "filesystem"  # weitere Konnektoren: Phase 3
+    kind: Literal["filesystem", "confluence", "sharepoint", "imap"] = "filesystem"
     config: dict = Field(default_factory=dict)
     default_acl: list[str] = Field(default_factory=lambda: ["all-users"])
     enabled: bool = True
@@ -117,3 +117,24 @@ class StatsOut(BaseModel):
     chunks: int
     conversations: int
     feedback_open: int
+
+
+class ApiKeyCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+    scopes: list[Literal["chat", "search"]] = Field(default_factory=lambda: ["chat", "search"])
+    groups: list[str] = Field(default_factory=lambda: ["all-users"])
+
+
+class ApiKeyOut(BaseModel):
+    id: UUID
+    name: str
+    key_prefix: str
+    scopes: list[str]
+    groups: list[str]
+    enabled: bool
+    created_by: str
+    last_used_at: str | None = None
+
+
+class ApiKeyCreated(ApiKeyOut):
+    key: str  # Klartext – wird nur einmal bei der Erstellung geliefert

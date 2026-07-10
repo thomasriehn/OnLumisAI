@@ -14,7 +14,6 @@ import asyncio
 import json
 import logging
 import sys
-from dataclasses import dataclass, field
 from pathlib import Path
 from uuid import UUID
 
@@ -24,28 +23,24 @@ import httpx
 from . import indexer
 from .chunking import chunk_blocks
 from .config import settings
-from .connectors.filesystem import FilesystemConnector
+from .connectors.confluence import ConfluenceConnector
+from .connectors.filesystem import FilesystemConnector, acl_for
+from .connectors.imap import ImapConnector
+from .connectors.sharepoint import SharePointConnector
 from .embedder import Embedder
-from .parsing import parse_file
+from .engine import SyncStats, sync_remote_source
+from .ocr import parse_with_ocr
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("onlumis.ingestion")
 
-
-@dataclass
-class SyncStats:
-    scanned: int = 0
-    indexed: int = 0
-    unchanged: int = 0
-    removed: int = 0
-    errors: list[str] = field(default_factory=list)
-
-    def summary(self) -> str:
-        status = "ok" if not self.errors else f"error: {'; '.join(self.errors[:3])}"
-        return (
-            f"{status} (gescannt={self.scanned}, indexiert={self.indexed}, "
-            f"unverändert={self.unchanged}, entfernt={self.removed})"
-        )
+# Registry der Remote-Konnektoren (AP 3.1); 'filesystem' hat einen eigenen,
+# optimierten Pfad (zweistufige Change Detection über mtime/size + Hash).
+REMOTE_CONNECTORS = {
+    "confluence": ConfluenceConnector,
+    "sharepoint": SharePointConnector,
+    "imap": ImapConnector,
+}
 
 
 async def sync_filesystem_source(
@@ -54,7 +49,8 @@ async def sync_filesystem_source(
     stats = SyncStats()
     source_id: UUID = source["id"]
     config = json.loads(source["config"])
-    acl_groups = list(source["default_acl"])
+    default_acl = list(source["default_acl"])
+    acl_rules = config.get("acl_rules", [])
     connector = FilesystemConnector(Path(config["root_path"]))
 
     async with pool.acquire() as conn:
@@ -80,7 +76,7 @@ async def sync_filesystem_source(
                 stats.unchanged += 1
                 continue
 
-            parsed = parse_file(f.path)
+            parsed = parse_with_ocr(f.path)
             chunks = chunk_blocks(parsed.blocks)
             if not chunks:
                 logger.warning("Kein extrahierbarer Text: %s (Scan ohne OCR?)", f.external_id)
@@ -97,7 +93,7 @@ async def sync_filesystem_source(
                     title=parsed.title or f.path.stem,
                     mime_type=f.mime_type,
                     content_hash=digest,
-                    acl_groups=acl_groups,
+                    acl_groups=acl_for(f.external_id, acl_rules, default_acl),
                     meta=f.meta,
                     chunks=chunks,
                     embeddings=embeddings,
@@ -114,13 +110,29 @@ async def sync_filesystem_source(
     return stats
 
 
+async def _sync_one(
+    pool: asyncpg.Pool, embedder: Embedder, source: asyncpg.Record
+) -> SyncStats:
+    kind = source["kind"]
+    if kind == "filesystem":
+        return await sync_filesystem_source(pool, embedder, source)
+    connector_cls = REMOTE_CONNECTORS.get(kind)
+    if connector_cls is None:
+        raise ValueError(f"Unbekannter Quell-Typ: {kind}")
+    connector = connector_cls(json.loads(source["config"]))
+    try:
+        return await sync_remote_source(pool, embedder, source, connector)
+    finally:
+        await connector.aclose()
+
+
 async def run_once(pool: asyncpg.Pool, embedder: Embedder) -> None:
     async with pool.acquire() as conn:
         sources = await conn.fetch(
             """
             SELECT id, name, kind, config::text AS config, default_acl
             FROM knowledge.sources
-            WHERE enabled AND kind = 'filesystem'
+            WHERE enabled
             ORDER BY created_at
             """
         )
@@ -128,9 +140,9 @@ async def run_once(pool: asyncpg.Pool, embedder: Embedder) -> None:
         logger.info("Keine aktiven Quellen konfiguriert (add-source verwenden)")
         return
     for source in sources:
-        logger.info("Sync von Quelle '%s' startet", source["name"])
+        logger.info("Sync von Quelle '%s' (%s) startet", source["name"], source["kind"])
         try:
-            stats = await sync_filesystem_source(pool, embedder, source)
+            stats = await _sync_one(pool, embedder, source)
             logger.info("Quelle '%s': %s", source["name"], stats.summary())
         except Exception as exc:  # noqa: BLE001 - eine Quelle darf andere nicht stoppen
             logger.exception("Sync von '%s' fehlgeschlagen", source["name"])

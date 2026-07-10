@@ -14,6 +14,11 @@ class Settings(BaseSettings):
     oidc_issuer_url: str = ""
     oidc_audience: str | None = None
     admin_group: str = "onlumis-admin"
+    auditor_group: str = "onlumis-auditor"
+
+    # Requests pro Nutzer und Minute auf Chat/Suche (0 = aus). In-Memory,
+    # pro Prozess – ausreichend für den Single-Node-Appliance-Betrieb.
+    rate_limit_per_minute: int = 120
 
     # OpenAI-kompatible Modell-Endpunkte (vLLM); RERANK_BASE_URL leer = kein Reranking.
     chat_base_url: str = "http://localhost:8001/v1"
@@ -34,6 +39,10 @@ class Settings(BaseSettings):
     answer_max_tokens: int = 1024
     answer_temperature: float = 0.2
     history_messages: int = 6       # Konversationsverlauf im Prompt (Anzahl Nachrichten)
+
+    # Query-Rewriting (AP 3.7): Folgefragen werden vor dem Retrieval mit dem
+    # Konversationskontext zu einer eigenständigen Suchanfrage umformuliert.
+    query_rewrite_enabled: bool = True
 
     # Audit: false = Fragen nur als SHA-256-Hash protokollieren (Datenschutz-Default)
     audit_log_questions: bool = False

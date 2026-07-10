@@ -4,14 +4,23 @@ Alle Endpunkte erfordern die Gruppe aus ADMIN_GROUP (Default: onlumis-admin).
 """
 
 import json
+import secrets
 from uuid import UUID
 
 import asyncpg
 from fastapi import APIRouter, Depends, HTTPException
 
 from .. import audit, db
-from ..auth import User, require_admin
-from ..schemas import SourceCreate, SourceOut, SourceUpdate, StatsOut
+from ..auth import API_KEY_PREFIX, User, hash_api_key, require_admin
+from ..schemas import (
+    ApiKeyCreate,
+    ApiKeyCreated,
+    ApiKeyOut,
+    SourceCreate,
+    SourceOut,
+    SourceUpdate,
+    StatsOut,
+)
 
 router = APIRouter(prefix="/v1/admin", tags=["admin"])
 
@@ -97,6 +106,85 @@ async def update_source(
         )
         row = await conn.fetchrow(_SOURCE_SELECT + " WHERE s.id = $1", source_id)
     return _source_out(row)
+
+
+def _api_key_out(row: asyncpg.Record) -> ApiKeyOut:
+    return ApiKeyOut(
+        id=row["id"],
+        name=row["name"],
+        key_prefix=row["key_prefix"],
+        scopes=list(row["scopes"]),
+        groups=list(row["groups"]),
+        enabled=row["enabled"],
+        created_by=row["created_by"],
+        last_used_at=row["last_used_at"].isoformat() if row["last_used_at"] else None,
+    )
+
+
+@router.get("/api-keys", response_model=list[ApiKeyOut])
+async def list_api_keys(user: User = Depends(require_admin)) -> list[ApiKeyOut]:
+    rows = await db.pool().fetch("SELECT * FROM app.api_keys ORDER BY created_at")
+    return [_api_key_out(r) for r in rows]
+
+
+@router.post("/api-keys", response_model=ApiKeyCreated, status_code=201)
+async def create_api_key(
+    req: ApiKeyCreate, user: User = Depends(require_admin)
+) -> ApiKeyCreated:
+    key = API_KEY_PREFIX + secrets.token_urlsafe(32)
+    async with db.pool().acquire() as conn:
+        try:
+            row = await conn.fetchrow(
+                """
+                INSERT INTO app.api_keys (name, key_prefix, key_hash, scopes, groups, created_by)
+                VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
+                """,
+                req.name,
+                key[: len(API_KEY_PREFIX) + 6],
+                hash_api_key(key),
+                req.scopes,
+                req.groups,
+                user.username,
+            )
+        except asyncpg.UniqueViolationError as exc:
+            raise HTTPException(status_code=409, detail="Key-Name bereits vergeben") from exc
+        await audit.log_event(
+            conn, user.username, "admin:apikey_created",
+            meta={"name": req.name, "scopes": req.scopes, "groups": req.groups},
+        )
+    return ApiKeyCreated(**_api_key_out(row).model_dump(), key=key)
+
+
+@router.patch("/api-keys/{key_id}", response_model=ApiKeyOut)
+async def update_api_key(
+    key_id: UUID, enabled: bool, user: User = Depends(require_admin)
+) -> ApiKeyOut:
+    async with db.pool().acquire() as conn:
+        row = await conn.fetchrow(
+            "UPDATE app.api_keys SET enabled = $2 WHERE id = $1 RETURNING *",
+            key_id,
+            enabled,
+        )
+        if row is None:
+            raise HTTPException(status_code=404, detail="API-Key nicht gefunden")
+        await audit.log_event(
+            conn, user.username, "admin:apikey_updated",
+            meta={"id": str(key_id), "enabled": enabled},
+        )
+    return _api_key_out(row)
+
+
+@router.delete("/api-keys/{key_id}", status_code=204)
+async def delete_api_key(key_id: UUID, user: User = Depends(require_admin)) -> None:
+    async with db.pool().acquire() as conn:
+        deleted = await conn.fetchval(
+            "DELETE FROM app.api_keys WHERE id = $1 RETURNING id", key_id
+        )
+        if deleted is None:
+            raise HTTPException(status_code=404, detail="API-Key nicht gefunden")
+        await audit.log_event(
+            conn, user.username, "admin:apikey_deleted", meta={"id": str(key_id)}
+        )
 
 
 @router.get("/stats", response_model=StatsOut)

@@ -9,6 +9,13 @@
 # - Auth im Dev-Modus (X-Dev-User/X-Dev-Groups-Header statt OIDC).
 
 services:
+  webapp:
+    environment:
+      AUTH_MODE: dev
+      DEV_USER: ${DEV_USER:-dev}
+      # Dev-Identität inkl. Admin-Rolle, damit /admin lokal nutzbar ist
+      DEV_GROUPS: ${DEV_GROUPS:-all-users,onlumis-admin}
+
   api:
     environment:
       AUTH_MODE: dev

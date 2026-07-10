@@ -3,8 +3,9 @@
 from fastapi import APIRouter, Depends, Request
 
 from .. import audit, db
-from ..auth import User, get_current_user
+from ..auth import User, ensure_scope
 from ..config import settings
+from ..rate import rate_limited_user
 from ..retrieval import retrieve
 from ..schemas import SearchRequest, SearchResponse, SearchResult
 
@@ -13,8 +14,9 @@ router = APIRouter(prefix="/v1", tags=["search"])
 
 @router.post("/search", response_model=SearchResponse)
 async def search(
-    req: SearchRequest, request: Request, user: User = Depends(get_current_user)
+    req: SearchRequest, request: Request, user: User = Depends(rate_limited_user)
 ) -> SearchResponse:
+    ensure_scope(user, "search")
     gateway = request.app.state.gateway
     async with db.pool().acquire() as conn:
         chunks = await retrieve(gateway, conn, req.query, user.groups, top_k=req.top_k)

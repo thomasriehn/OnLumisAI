@@ -4,9 +4,12 @@
 **Planungshorizont:** ~26 Wochen bis General Availability (GA), MVP nach 8 Wochen
 **Nominaler Start:** 03.08.2026 (alle Daten relativ verschiebbar)
 
-> **Umsetzungsstand:** Phase 0 und der RAG-Kern aus Phase 1 (AP 1.1–1.7) sind
-> unter [`platform/`](../platform/) implementiert und getestet – Details in der
-> Status-Tabelle des [`platform/README.md`](../platform/README.md).
+> **Umsetzungsstand:** Die Software-Arbeitspakete der Phasen 0–5 sind unter
+> [`platform/`](../platform/) implementiert und getestet (RAG-Kern, Sicherheit
+> inkl. OIDC/API-Keys/Audit, Konnektoren, MCP/Admin-Portal, Eval-Harness,
+> LoRA-Pipeline). Offen sind bewusst deployment-gebundene Punkte (Teams-Bot,
+> AD-Federation beim Kunden, Lasttest/Pilot/Air-Gap aus Phase 6) – Details in
+> der Status-Tabelle des [`platform/README.md`](../platform/README.md).
 
 ---
 

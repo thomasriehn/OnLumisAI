@@ -5,6 +5,7 @@ auf der das Chunking arbeitet. Der Docling-Backend (Layout-/Tabellenerkennung,
 ADR-6) und OCR für Scans docken später an derselben Schnittstelle an.
 """
 
+import io
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -89,10 +90,10 @@ def parse_html(data: str) -> ParsedDocument:
     return ParsedDocument(title=title, blocks=blocks)
 
 
-def parse_pdf(path: Path) -> ParsedDocument:
+def parse_pdf(source: Path | io.BytesIO) -> ParsedDocument:
     from pypdf import PdfReader
 
-    reader = PdfReader(str(path))
+    reader = PdfReader(str(source) if isinstance(source, Path) else source)
     blocks: list[Block] = []
     for page_no, page in enumerate(reader.pages, start=1):
         text = (page.extract_text() or "").strip()
@@ -109,10 +110,10 @@ def parse_pdf(path: Path) -> ParsedDocument:
 _DOCX_HEADING_RE = re.compile(r"^Heading (\d)$|^Überschrift (\d)$")
 
 
-def parse_docx(path: Path) -> ParsedDocument:
+def parse_docx(source: Path | io.BytesIO) -> ParsedDocument:
     import docx
 
-    document = docx.Document(str(path))
+    document = docx.Document(str(source) if isinstance(source, Path) else source)
     blocks: list[Block] = []
     title: str | None = document.core_properties.title or None
     for para in document.paragraphs:
@@ -142,4 +143,20 @@ def parse_file(path: Path) -> ParsedDocument:
         return parse_pdf(path)
     if suffix == ".docx":
         return parse_docx(path)
+    raise ValueError(f"Nicht unterstütztes Format: {suffix}")
+
+
+def parse_bytes(name: str, data: bytes) -> ParsedDocument:
+    """Wie parse_file, aber für Inhalte aus Remote-Konnektoren (AP 3.1)."""
+    suffix = Path(name).suffix.lower()
+    if suffix in (".md", ".markdown"):
+        return parse_markdown(data.decode("utf-8", errors="replace"))
+    if suffix == ".txt":
+        return parse_text(data.decode("utf-8", errors="replace"))
+    if suffix in (".html", ".htm"):
+        return parse_html(data.decode("utf-8", errors="replace"))
+    if suffix == ".pdf":
+        return parse_pdf(io.BytesIO(data))
+    if suffix == ".docx":
+        return parse_docx(io.BytesIO(data))
     raise ValueError(f"Nicht unterstütztes Format: {suffix}")

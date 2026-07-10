@@ -83,3 +83,37 @@ def mark_used_citations(answer: str, citations: list[dict]) -> list[dict]:
     for c in citations:
         c["used"] = c["n"] in used
     return citations
+
+
+REWRITE_SYSTEM_PROMPT = """\
+Du formulierst aus einem Gesprächsverlauf und einer Folgefrage eine \
+eigenständige, vollständige Suchanfrage für eine interne Dokumentensuche. \
+Löse Pronomen und Bezüge auf ("dafür", "dort", "diese Maschine"). \
+Antworte AUSSCHLIESSLICH mit der Suchanfrage, ohne Anführungszeichen.\
+"""
+
+
+async def rewrite_query(gateway, history: list[dict], question: str) -> str:
+    """Folgefrage → eigenständige Retrieval-Query (AP 3.7).
+
+    Fällt bei Fehlern oder unbrauchbarer Ausgabe auf die Originalfrage zurück –
+    Rewriting darf nie einen Chat verhindern.
+    """
+    if not history or not settings.query_rewrite_enabled:
+        return question
+    transcript = "\n".join(f"{m['role']}: {m['content'][:500]}" for m in history[-6:])
+    try:
+        rewritten = await gateway.chat(
+            [
+                {"role": "system", "content": REWRITE_SYSTEM_PROMPT},
+                {"role": "user", "content": f"Verlauf:\n{transcript}\n\nFolgefrage: {question}"},
+            ],
+            temperature=0.0,
+            max_tokens=120,
+        )
+    except Exception:  # noqa: BLE001 - Fallback auf Originalfrage
+        return question
+    rewritten = (rewritten or "").strip().strip('"')
+    if not rewritten or len(rewritten) > 400 or "\n" in rewritten.strip():
+        return question
+    return rewritten

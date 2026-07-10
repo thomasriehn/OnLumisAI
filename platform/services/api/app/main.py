@@ -5,12 +5,15 @@ import httpx
 from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from . import db
+from . import db, runtime
 from .config import settings
 from .llm import ModelGateway
-from .routers import admin, chat, feedback, health, search
+from .mcp_server import mcp
+from .routers import admin, auditlog, chat, feedback, health, modelops, search
 
 logger = logging.getLogger("onlumis")
+
+mcp_http = mcp.streamable_http_app()
 
 
 @asynccontextmanager
@@ -23,7 +26,10 @@ async def lifespan(app: FastAPI):
     await db.init_pool()
     app.state.http = httpx.AsyncClient(timeout=settings.request_timeout_seconds)
     app.state.gateway = ModelGateway(app.state.http)
-    yield
+    runtime.set_gateway(app.state.gateway)
+    async with mcp.session_manager.run():
+        yield
+    runtime.set_gateway(None)
     await app.state.http.aclose()
     await db.close_pool()
 
@@ -40,6 +46,10 @@ app.include_router(chat.router)
 app.include_router(search.router)
 app.include_router(feedback.router)
 app.include_router(admin.router)
+app.include_router(auditlog.router)
+app.include_router(modelops.router)
+
+app.mount("/mcp", mcp_http)
 
 Instrumentator().instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
 

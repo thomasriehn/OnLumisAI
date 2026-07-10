@@ -15,5 +15,9 @@ class Settings(BaseSettings):
     chunk_overlap_chars: int = 200
     chunk_min_chars: int = 20
 
+    # OCR-Fallback für Bild-PDFs (benötigt .[ocr] + tesseract/poppler)
+    ocr_enabled: bool = True
+    ocr_languages: str = "deu+eng"
+
 
 settings = Settings()

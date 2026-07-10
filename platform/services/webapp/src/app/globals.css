@@ -80,6 +80,30 @@ body {
   font-size: 0.85rem;
 }
 
+.tabs {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.tab {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.tab:hover {
+  border-color: var(--border);
+}
+
+.tab.active {
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
 .messages {
   flex: 1;
   overflow-y: auto;
@@ -266,4 +290,107 @@ body {
   color: var(--muted);
   font-size: 0.72rem;
   padding-bottom: 10px;
+}
+
+/* ------------------------------------------------------------- Verwaltung */
+
+.admin {
+  gap: 18px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.stat {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.card h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.card table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 10px 0;
+}
+
+.card th,
+.card td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.source-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.source-form input,
+.source-form select {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.source-form button,
+button.small {
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+button.small:disabled,
+.source-form button:disabled {
+  opacity: 0.5;
 }
