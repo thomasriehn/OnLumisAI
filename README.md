@@ -140,28 +140,19 @@ src/
   app/                Seiten (App Router), API-Route, Sitemap/Robots
   components/          Wiederverwendbare UI-Komponenten
   lib/                 Site-Konfiguration, Validierung, Mailer, Rate-Limit
-docs/                  Technische Planung der OnLumis-Plattform
-platform/              Implementierung der OnLumis-Plattform (Compose, Services)
 ```
 
 ## Plattform (Produkt)
 
 Die eigentliche OnLumis-Plattform (On-Premise-RAG auf NVIDIA DGX Spark, vLLM,
-dockerisierte PostgreSQL mit pgvector, Fine-Tuning) wird in diesem Repository
-mitentwickelt:
-
-- [`docs/architektur.md`](docs/architektur.md) – Architekturmodell
-  (Systemüberblick, Bausteine, Datenmodell, Sicherheit, Deployment, ADRs)
-- [`docs/implementierungsplan.md`](docs/implementierungsplan.md) –
-  Implementierungsplan (Phasen, Meilensteine, Zeitplan, Team, Risiken)
-- [`platform/`](platform/) – **Implementierung** (Phasen 0–6, softwareseitig
-  vollständig): Compose-Stack, RAG-API, Konnektoren, Chat/Suche/Admin-UI mit
-  OIDC-Login und Spracheingabe, Model-Ops, Betriebs-Tooling. Quickstart und
-  Umsetzungsstand im [`platform/README.md`](platform/README.md)
-- [`docs/admin-handbuch.md`](docs/admin-handbuch.md) – Handbuch für
-  Administratoren/Kuratoren · [`docs/dsgvo/`](docs/dsgvo/) – DSGVO-Vorlagen
-  (AVV, TOMs, Löschkonzept, VVT) ·
-  [`platform/deploy/RUNBOOK.md`](platform/deploy/RUNBOOK.md) – Betrieb
+dockerisierte PostgreSQL mit pgvector, Fine-Tuning) ist in ein eigenes
+Repository umgezogen:
+[**`thomasriehn/onlumis-platform`**](https://github.com/thomasriehn/onlumis-platform)
+– dort liegen die Implementierung (Compose-Stack, RAG-API, Konnektoren,
+Chat/Suche/Admin-UI mit OIDC-Login und Spracheingabe, Model-Ops,
+Betriebs-Tooling) sowie Architekturmodell, Implementierungsplan,
+Admin-Handbuch, DSGVO-Vorlagen und das Betriebs-Runbook (`docs/`,
+`deploy/RUNBOOK.md`).
 
 ## Deployment
 
