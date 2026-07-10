@@ -1,0 +1,44 @@
+# Entwicklungs-Override ohne GPU (Workstation/CI):
+#
+#   docker compose -f compose.yml -f compose.dev.yml up -d
+#
+# - Embeddings laufen lokal auf CPU (Text Embeddings Inference, BGE-M3).
+# - Chat-LLM: beliebiger OpenAI-kompatibler Endpoint, z. B. Ollama auf dem
+#   Host (DEV_CHAT_BASE_URL=http://host.docker.internal:11434/v1).
+# - Reranker ist deaktiviert (RERANK_BASE_URL leer -> Retrieval ohne Reranking).
+# - Auth im Dev-Modus (X-Dev-User/X-Dev-Groups-Header statt OIDC).
+
+services:
+  webapp:
+    environment:
+      AUTH_MODE: dev
+      DEV_USER: ${DEV_USER:-dev}
+      # Dev-Identität inkl. Admin-Rolle, damit /admin lokal nutzbar ist
+      DEV_GROUPS: ${DEV_GROUPS:-all-users,onlumis-admin}
+
+  api:
+    environment:
+      AUTH_MODE: dev
+      CHAT_BASE_URL: ${DEV_CHAT_BASE_URL:-http://host.docker.internal:11434/v1}
+      CHAT_MODEL: ${DEV_CHAT_MODEL:-qwen3:4b}
+      EMBEDDINGS_BASE_URL: http://tei-embed:80/v1
+      EMBEDDINGS_MODEL: BAAI/bge-m3
+      RERANK_BASE_URL: ""
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  ingestion:
+    environment:
+      EMBEDDINGS_BASE_URL: http://tei-embed:80/v1
+      EMBEDDINGS_MODEL: BAAI/bge-m3
+
+  tei-embed:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.8
+    restart: unless-stopped
+    command: ["--model-id", "BAAI/bge-m3", "--port", "80"]
+    volumes:
+      - tei-cache:/data
+    networks: [ml]
+
+volumes:
+  tei-cache:

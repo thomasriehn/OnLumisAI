@@ -1,0 +1,16 @@
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Webapp
+services/webapp/node_modules/
+services/webapp/.next/
+
+# Laufzeit
+.env
+data/sources/**
+!data/sources/beispiel/
+!data/sources/beispiel/**

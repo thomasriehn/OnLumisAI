@@ -1,0 +1,19 @@
+# Embedding-Modell (Architektur §6.3) – Dimension 1024, fest im DB-Schema.
+name: embed
+role: embeddings
+hf_repo: BAAI/bge-m3
+revision: main
+license: MIT
+languages: [multilingual]
+dimensions: 1024
+max_input_tokens: 8192
+serving:
+  engine: vllm
+  args:
+    served-model-name: embed
+    task: embed
+    gpu-memory-utilization: 0.04
+notes: >
+  Multilingual (stark auf Deutsch), 1024 Dimensionen (= vector(1024) in
+  knowledge.chunks). Ein Wechsel des Embedding-Modells erfordert Re-Indexierung
+  des gesamten Korpus. Dev-Betrieb: identisches Modell via TEI auf CPU.

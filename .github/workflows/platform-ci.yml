@@ -1,0 +1,55 @@
+name: platform-ci
+
+on:
+  push:
+    paths: ["platform/**", ".github/workflows/platform-ci.yml"]
+  pull_request:
+    paths: ["platform/**"]
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_DB: onlumis
+          POSTGRES_USER: onlumis
+          POSTGRES_PASSWORD: test
+        ports: ["55432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U onlumis"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    defaults:
+      run:
+        working-directory: platform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install services
+        run: pip install -e "./services/api[test]" -e "./services/ingestion[test]"
+      - name: Lint
+        run: ruff check services/ tests/ finetune/
+      - name: Tests (Unit + Integration gegen pgvector)
+        run: pytest -q
+
+  webapp:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: platform/services/webapp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: platform/services/webapp/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Build (Turbopack + TypeScript)
+        run: npm run build
