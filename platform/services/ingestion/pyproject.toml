@@ -1,0 +1,30 @@
+[project]
+name = "onlumis-ingestion"
+version = "0.1.0"
+description = "OnLumis Ingestion-Worker: Konnektoren, Parsing, Chunking, Embedding"
+requires-python = ">=3.11"
+dependencies = [
+    "asyncpg>=0.29",
+    "httpx>=0.27",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.2",
+    "pypdf>=4.2",
+    "python-docx>=1.1",
+    "beautifulsoup4>=4.12",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.4"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["worker", "worker.connectors"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100

@@ -141,18 +141,22 @@ src/
   components/          Wiederverwendbare UI-Komponenten
   lib/                 Site-Konfiguration, Validierung, Mailer, Rate-Limit
 docs/                  Technische Planung der OnLumis-Plattform
+platform/              Implementierung der OnLumis-Plattform (Compose, Services)
 ```
 
-## Plattform-Planung (Produkt)
+## Plattform (Produkt)
 
-Die technische Planung der eigentlichen OnLumis-Plattform (On-Premise-RAG auf
-NVIDIA DGX Spark, vLLM, dockerisierte PostgreSQL mit pgvector, Fine-Tuning)
-liegt unter [`docs/`](docs/):
+Die eigentliche OnLumis-Plattform (On-Premise-RAG auf NVIDIA DGX Spark, vLLM,
+dockerisierte PostgreSQL mit pgvector, Fine-Tuning) wird in diesem Repository
+mitentwickelt:
 
 - [`docs/architektur.md`](docs/architektur.md) – Architekturmodell
   (Systemüberblick, Bausteine, Datenmodell, Sicherheit, Deployment, ADRs)
 - [`docs/implementierungsplan.md`](docs/implementierungsplan.md) –
   Implementierungsplan (Phasen, Meilensteine, Zeitplan, Team, Risiken)
+- [`platform/`](platform/) – **Implementierung** (Phase 0 + RAG-Kern aus
+  Phase 1): Compose-Stack, RAG-API, Ingestion-Worker, Chat-UI, Tests.
+  Quickstart und Umsetzungsstand im [`platform/README.md`](platform/README.md)
 
 ## Deployment
 

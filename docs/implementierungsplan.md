@@ -1,8 +1,12 @@
 # OnLumis-Plattform – Implementierungsplan
 
-**Grundlage:** [Architekturmodell](architektur.md) · **Status:** Entwurf v1.0
+**Grundlage:** [Architekturmodell](architektur.md) · **Status:** v1.0, Umsetzung begonnen
 **Planungshorizont:** ~26 Wochen bis General Availability (GA), MVP nach 8 Wochen
 **Nominaler Start:** 03.08.2026 (alle Daten relativ verschiebbar)
+
+> **Umsetzungsstand:** Phase 0 und der RAG-Kern aus Phase 1 (AP 1.1–1.7) sind
+> unter [`platform/`](../platform/) implementiert und getestet – Details in der
+> Status-Tabelle des [`platform/README.md`](../platform/README.md).
 
 ---
 
