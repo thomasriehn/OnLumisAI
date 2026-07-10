@@ -20,6 +20,11 @@ type GapReport = {
   total: number;
   gaps: { question: string; occurrences: number; distinct_users: number; last_seen: string }[];
 };
+type PromptProfile = { group_name: string; instructions: string };
+type ApiKey = {
+  id: string; name: string; key_prefix: string; scopes: string[];
+  groups: string[]; enabled: boolean; last_used_at: string | null;
+};
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`/bff/admin/${path}`, {
@@ -42,22 +47,29 @@ export function AdminView() {
   const [busy, setBusy] = useState(false);
   const [uploadInfo, setUploadInfo] = useState<string | null>(null);
   const [gaps, setGaps] = useState<GapReport | null>(null);
+  const [profiles, setProfiles] = useState<PromptProfile[]>([]);
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
+  const [newKey, setNewKey] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
     try {
       setError(null);
-      const [s, src, fb, ev, gapsReport] = await Promise.all([
+      const [s, src, fb, ev, gapsReport, prof, keys] = await Promise.all([
         api<Stats>("stats"),
         api<Source[]>("sources"),
         api<FeedbackEntry[]>("feedback?reviewed=false"),
         api<EvalRun[]>("evals/runs"),
         api<GapReport>("reports/knowledge-gaps?days=30"),
+        api<PromptProfile[]>("prompt-profiles"),
+        api<ApiKey[]>("api-keys"),
       ]);
       setStats(s);
       setSources(src);
       setFeedback(fb);
       setRuns(ev);
       setGaps(gapsReport);
+      setProfiles(prof);
+      setApiKeys(keys);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unbekannter Fehler");
     }
@@ -262,6 +274,119 @@ export function AdminView() {
               )}
             </tbody>
           </table>
+        </section>
+
+        <section className="card">
+          <h2>Antwortprofile je Gruppe</h2>
+          <p className="muted">
+            Zusätzliche Stil-/Format-Vorgaben pro AD-Gruppe (z. B. Angebots-
+            Textbausteine für „vertrieb"). Sie wirken im Systemprompt.
+          </p>
+          {profiles.map((profile) => (
+            <div className="citation" key={profile.group_name} style={{ maxWidth: "100%" }}>
+              <span className="n">{profile.group_name}</span>
+              {profile.instructions}
+              <div>
+                <button
+                  className="conv-delete"
+                  style={{ visibility: "visible" }}
+                  onClick={async () => {
+                    await api(`prompt-profiles/${profile.group_name}`, { method: "DELETE" });
+                    await reload();
+                  }}
+                >
+                  × entfernen
+                </button>
+              </div>
+            </div>
+          ))}
+          <form
+            className="source-form"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              const data = new FormData(event.currentTarget);
+              const group = String(data.get("group"));
+              event.currentTarget.reset();
+              await api(`prompt-profiles/${group}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                  group_name: group,
+                  instructions: String(data.get("instructions")),
+                }),
+              }).catch((err) => setError(String(err)));
+              await reload();
+            }}
+          >
+            <input name="group" placeholder="Gruppe, z. B. vertrieb" required />
+            <input name="instructions" placeholder="Vorgaben, z. B. 'Antworte als Angebots-Textbaustein …'" required />
+            <button type="submit" disabled={busy}>Profil speichern</button>
+          </form>
+        </section>
+
+        <section className="card">
+          <h2>API-Keys (Integrationen)</h2>
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Prefix</th><th>Scopes</th><th>Gruppen</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+              {apiKeys.map((key) => (
+                <tr key={key.id}>
+                  <td>{key.name}</td>
+                  <td><code>{key.key_prefix}…</code></td>
+                  <td>{key.scopes.join(", ")}</td>
+                  <td>{key.groups.join(", ")}</td>
+                  <td>{key.enabled ? "aktiv" : "deaktiviert"}</td>
+                  <td>
+                    <button
+                      className="small"
+                      onClick={async () => {
+                        await api(`api-keys/${key.id}?enabled=${!key.enabled}`, { method: "PATCH" });
+                        await reload();
+                      }}
+                    >
+                      {key.enabled ? "deaktivieren" : "aktivieren"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {apiKeys.length === 0 && <tr><td colSpan={6}>Keine API-Keys angelegt.</td></tr>}
+            </tbody>
+          </table>
+          <form
+            className="source-form"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              const data = new FormData(event.currentTarget);
+              event.currentTarget.reset();
+              try {
+                const created = await api<{ key: string }>("api-keys", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    name: String(data.get("name")),
+                    scopes: String(data.get("scopes") || "chat,search")
+                      .split(",").map((s) => s.trim()).filter(Boolean),
+                    groups: String(data.get("groups") || "all-users")
+                      .split(",").map((s) => s.trim()).filter(Boolean),
+                  }),
+                });
+                setNewKey(created.key);
+                await reload();
+              } catch (err) {
+                setError(err instanceof Error ? err.message : "Key-Anlage fehlgeschlagen");
+              }
+            }}
+          >
+            <input name="name" placeholder="Name, z. B. intranet-suche" required />
+            <input name="scopes" placeholder="Scopes (chat,search)" />
+            <input name="groups" placeholder="ACL-Gruppen (all-users)" />
+            <button type="submit" disabled={busy}>Key erstellen</button>
+          </form>
+          {newKey && (
+            <p className="muted">
+              Neuer Key (wird nur einmal angezeigt!): <code>{newKey}</code>
+            </p>
+          )}
         </section>
 
         <section className="card">

@@ -107,16 +107,21 @@ Hybrid-Suche (Vektor + Volltext + RRF) → **ACL-Negativtests** → Tombstones.
 | **Abdeckung** Jira-, WebDAV-(DMS)-, Google-Drive-Konnektor; Whisper-Service, Audio-Ingestion | ✅ Mock-/Integrationstests; echte Systeme beim Piloten |
 | **Spracheingabe** Mikrofon in Chat/Suche → lokales Whisper (`/v1/transcriptions`) | ✅ UI + Endpoint getestet; Whisper-Modell läuft auf der Spark |
 | **Strategisch** Wissenslücken-Report (Zero-Hit-Fragen, pseudonymisiert) + MCP-Tool `draft_text` | ✅ umgesetzt + getestet |
-| **Phase 6** Lasttest, Backup-Runbooks, Air-Gap-Bundle, Pilot | ⬜ Deployment-Phase (auf der Ziel-Hardware) |
+| **Phase 6** Backup/Restore (`deploy/backup/`, systemd-Timer) | ✅ Skripte + Roundtrip gegen echtes Postgres verifiziert |
+| Phase 6 Air-Gap-Bundle (`deploy/airgap/`, `compose.airgap.yml`) | ✅ Export/Import-Tooling, Compose-Override validiert |
+| Phase 6 Lasttest-Tool (`deploy/bench/loadtest.py`, TTFT/Durchsatz/429) | ✅ live gegen Dev-Stack verifiziert; Messung auf der Spark = AP 1.9 |
+| Phase 6 Betriebs-/Nutzerdoku: `deploy/RUNBOOK.md`, `docs/admin-handbuch.md`, DSGVO-Paket (`docs/dsgvo/`), Eval-Seed (`db/seed/`) | ✅ erstellt (DSGVO: Vorlagen mit juristischem Prüfvorbehalt) |
+| Phase 6 Ausführung auf Ziel-Hardware: PoC-Messung, Restore-Übung, Pentest, Pilotbetrieb | ⬜ Deployment (Runbook §§2–5 führen durch) |
 
 ## Struktur
 
 ```
 platform/
-  compose.yml / compose.dev.yml   Stack (Spark bzw. Dev ohne GPU)
+  compose.yml / .dev.yml / .airgap.yml   Stack (Spark, Dev ohne GPU, offline)
   .env.example                    Konfiguration
-  db/init/                        Schema (pgvector, knowledge/app/audit/eval)
-  deploy/                         Caddy, Keycloak-Realm, Prometheus, Grafana
+  db/init/  db/seed/              Schema + goldene Starterfragen
+  deploy/                         Caddy, Keycloak-Realm, Monitoring,
+                                  backup/, airgap/, bench/, systemd/, RUNBOOK.md
   models/                         Modell-Manifeste + Download (Air-Gap-fähig)
   services/api/                   FastAPI RAG-Orchestrator + MCP-Server
   services/ingestion/             Konnektoren, Parsing/OCR, Chunking, Indexer

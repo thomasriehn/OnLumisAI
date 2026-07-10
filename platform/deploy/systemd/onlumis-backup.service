@@ -1,0 +1,11 @@
+# Nächtliches Backup (siehe onlumis-backup.timer).
+[Unit]
+Description=OnLumis Backup
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+Environment=BACKUP_DIR=/var/backups/onlumis
+Environment=KEEP=14
+ExecStart=/opt/onlumis/platform/deploy/backup/backup.sh

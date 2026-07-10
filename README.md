@@ -154,9 +154,14 @@ mitentwickelt:
   (Systemüberblick, Bausteine, Datenmodell, Sicherheit, Deployment, ADRs)
 - [`docs/implementierungsplan.md`](docs/implementierungsplan.md) –
   Implementierungsplan (Phasen, Meilensteine, Zeitplan, Team, Risiken)
-- [`platform/`](platform/) – **Implementierung** (Phase 0 + RAG-Kern aus
-  Phase 1): Compose-Stack, RAG-API, Ingestion-Worker, Chat-UI, Tests.
-  Quickstart und Umsetzungsstand im [`platform/README.md`](platform/README.md)
+- [`platform/`](platform/) – **Implementierung** (Phasen 0–6, softwareseitig
+  vollständig): Compose-Stack, RAG-API, Konnektoren, Chat/Suche/Admin-UI mit
+  OIDC-Login und Spracheingabe, Model-Ops, Betriebs-Tooling. Quickstart und
+  Umsetzungsstand im [`platform/README.md`](platform/README.md)
+- [`docs/admin-handbuch.md`](docs/admin-handbuch.md) – Handbuch für
+  Administratoren/Kuratoren · [`docs/dsgvo/`](docs/dsgvo/) – DSGVO-Vorlagen
+  (AVV, TOMs, Löschkonzept, VVT) ·
+  [`platform/deploy/RUNBOOK.md`](platform/deploy/RUNBOOK.md) – Betrieb
 
 ## Deployment
 
