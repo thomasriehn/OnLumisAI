@@ -140,7 +140,19 @@ src/
   app/                Seiten (App Router), API-Route, Sitemap/Robots
   components/          Wiederverwendbare UI-Komponenten
   lib/                 Site-Konfiguration, Validierung, Mailer, Rate-Limit
+docs/                  Technische Planung der OnLumis-Plattform
 ```
+
+## Plattform-Planung (Produkt)
+
+Die technische Planung der eigentlichen OnLumis-Plattform (On-Premise-RAG auf
+NVIDIA DGX Spark, vLLM, dockerisierte PostgreSQL mit pgvector, Fine-Tuning)
+liegt unter [`docs/`](docs/):
+
+- [`docs/architektur.md`](docs/architektur.md) – Architekturmodell
+  (Systemüberblick, Bausteine, Datenmodell, Sicherheit, Deployment, ADRs)
+- [`docs/implementierungsplan.md`](docs/implementierungsplan.md) –
+  Implementierungsplan (Phasen, Meilensteine, Zeitplan, Team, Risiken)
 
 ## Deployment
 
