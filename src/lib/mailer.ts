@@ -7,12 +7,17 @@ function getTransport() {
   const secure = process.env.SMTP_SECURE === "true";
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
+  // Ein lokales Relay (Postfix auf demselben Host) bietet STARTTLS oft nur
+  // mit selbstsigniertem Zertifikat an. Nur per ausdrücklichem Opt-in
+  // akzeptieren – bei externen SMTP-Servern muss die Prüfung anbleiben.
+  const allowSelfSigned = process.env.SMTP_ALLOW_SELF_SIGNED === "true";
 
   return nodemailer.createTransport({
     host,
     port,
     secure,
     auth: user && pass ? { user, pass } : undefined,
+    tls: allowSelfSigned ? { rejectUnauthorized: false } : undefined,
   });
 }
 

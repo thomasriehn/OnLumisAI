@@ -48,6 +48,7 @@ cp .env.example .env.local
 | `SMTP_SECURE`  | `"true"` für implizites TLS (z. B. Port 465), sonst `"false"`                 | `false` |
 | `SMTP_USER`    | Optional: Benutzername, falls der Server/Postfix-Relay Auth verlangt          | leer |
 | `SMTP_PASS`    | Optional: Passwort, falls der Server/Postfix-Relay Auth verlangt              | leer |
+| `SMTP_ALLOW_SELF_SIGNED` | `"true"`, wenn das **lokale** Relay STARTTLS nur mit selbstsigniertem Zertifikat anbietet (deaktiviert die Zertifikatsprüfung – nie für externe Server!) | `false` |
 | `MAIL_FROM`    | Absenderadresse der versendeten Mails                                        | `OnLumis Website <no-reply@onlumis.ai>` |
 | `MAIL_TO`      | Empfängeradresse für eingehende Kontaktanfragen                              | `info@onlumis.ai` |
 
@@ -65,6 +66,8 @@ SMTP_PORT=25
 SMTP_SECURE=false
 SMTP_USER=
 SMTP_PASS=
+# nur nötig, wenn Postfix STARTTLS mit selbstsigniertem Zertifikat anbietet:
+SMTP_ALLOW_SELF_SIGNED=true
 ```
 
 Postfix muss dafür ausgehende Mails zustellen bzw. an einen Smarthost
