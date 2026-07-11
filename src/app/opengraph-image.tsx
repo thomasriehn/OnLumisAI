@@ -20,13 +20,14 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        {/* Bild- und Wortmarke analog zu components/Logo.tsx */}
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
           <div
             style={{
-              width: 56,
-              height: 56,
+              width: 64,
+              height: 64,
               borderRadius: "50%",
-              border: "3px solid rgba(14,159,126,0.9)",
+              background: "#17436a",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -34,15 +35,27 @@ export default function OpengraphImage() {
           >
             <div
               style={{
-                width: 20,
-                height: 20,
+                width: 52,
+                height: 52,
                 borderRadius: "50%",
-                background: "#0e9f7e",
+                border: "2px solid rgba(14,159,126,0.7)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-            />
+            >
+              <div
+                style={{
+                  width: 16,
+                  height: 16,
+                  borderRadius: "50%",
+                  background: "#0e9f7e",
+                }}
+              />
+            </div>
           </div>
-          <div style={{ fontSize: 36, fontWeight: 700, display: "flex" }}>
-            Wissens<span style={{ color: "#3ddbb0" }}>Kern</span>
+          <div style={{ fontSize: 40, fontWeight: 700, display: "flex" }}>
+            On<span style={{ color: "#3ddbb0" }}>Lumis</span>
           </div>
         </div>
 
