@@ -6,11 +6,7 @@ export function Logo({ className = "" }: { className?: string }) {
       className={`brand ${className}`}
       aria-label="OnLumisAI – Startseite"
     >
-      <span className="brand-symbol" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-      </span>
+      <span className="brand-symbol" aria-hidden="true" />
       <span>
         OnLumis<span className="brand-ai">AI</span>
       </span>

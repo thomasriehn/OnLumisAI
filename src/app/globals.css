@@ -142,28 +142,13 @@ p {
   font-weight: 450;
 }
 .brand-symbol {
-  position: relative;
-  width: 28px;
-  height: 31px;
+  width: 12px;
+  height: 12px;
   display: inline-block;
-}
-.brand-symbol i {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  left: 0;
-  top: 0;
-  border: 1.6px solid currentColor;
+  flex-shrink: 0;
   border-radius: 50%;
-}
-.brand-symbol i:nth-child(2) {
-  left: 8px;
-  top: 0;
-}
-.brand-symbol i:nth-child(3) {
-  left: 4px;
-  top: 9px;
-  background: #32655514;
+  background: #32c5a1;
+  box-shadow: 0 0 14px #32c5a170;
 }
 .desktop-nav {
   display: flex;
