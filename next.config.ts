@@ -36,6 +36,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.onlumis.ai" }],
+        destination: "https://onlumis.ai/:path*",
+        permanent: true,
+      },
+      {
         source: "/videos.html",
         destination: "/demo/video.html",
         permanent: false,
