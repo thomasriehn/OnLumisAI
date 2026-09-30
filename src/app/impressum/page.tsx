@@ -36,12 +36,18 @@ export default function ImpressumPage() {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-ink dark:text-white">Vertreten durch</h2>
-            <p className="mt-3">Geschäftsführer: {siteConfig.company.managingDirector}</p>
+            <h2 className="text-lg font-semibold text-ink dark:text-white">
+              Vertreten durch
+            </h2>
+            <p className="mt-3">
+              Geschäftsführer: {siteConfig.company.managingDirector}
+            </p>
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-ink dark:text-white">Kontakt</h2>
+            <h2 className="text-lg font-semibold text-ink dark:text-white">
+              Kontakt
+            </h2>
             <p className="mt-3">
               E-Mail:{" "}
               <a
@@ -79,38 +85,46 @@ export default function ImpressumPage() {
               Hinweis zum Angebot
             </h2>
             <p className="mt-3">
-              {siteConfig.company.legalName} hat ihren Sitz in der Schweiz. OnLumis (
-              {siteConfig.url}) ist ein Produkt der {siteConfig.company.legalName} und richtet
-              sich als B2B-Angebot auch an Unternehmenskundinnen und -kunden in Deutschland und
-              der übrigen EU. Es liegt kein Verbraucherangebot im Sinne der
+              {siteConfig.company.legalName} hat ihren Sitz in der Schweiz.
+              OnLumis ({siteConfig.url}) ist ein Produkt der{" "}
+              {siteConfig.company.legalName} und richtet sich als B2B-Angebot
+              auch an Unternehmenskundinnen und -kunden in Deutschland und der
+              übrigen EU. Es liegt kein Verbraucherangebot im Sinne der
               Verbraucherstreitbeilegung vor.
             </p>
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-ink dark:text-white">Haftungsausschluss</h2>
+            <h2 className="text-lg font-semibold text-ink dark:text-white">
+              Haftungsausschluss
+            </h2>
             <p className="mt-3">
-              Die Inhalte dieser Website werden mit grösster Sorgfalt erstellt. Für die
-              Richtigkeit, Vollständigkeit und Aktualität der Inhalte übernehmen wir jedoch keine
-              Gewähr. Als Anbieterin sind wir für eigene Inhalte auf dieser Website nach den
-              allgemeinen gesetzlichen Bestimmungen verantwortlich.
+              Die Inhalte dieser Website werden mit grösster Sorgfalt erstellt.
+              Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte
+              übernehmen wir jedoch keine Gewähr. Als Anbieterin sind wir für
+              eigene Inhalte auf dieser Website nach den allgemeinen
+              gesetzlichen Bestimmungen verantwortlich.
             </p>
             <p className="mt-3">
-              Diese Website kann Links zu externen Websites Dritter enthalten, auf deren Inhalte
-              wir keinen Einfluss haben. Für diese fremden Inhalte übernehmen wir daher keine
-              Gewähr; verantwortlich ist stets die jeweilige Anbieterin oder der jeweilige
-              Betreiber der verlinkten Seite. Bei Bekanntwerden von Rechtsverletzungen werden
+              Diese Website kann Links zu externen Websites Dritter enthalten,
+              auf deren Inhalte wir keinen Einfluss haben. Für diese fremden
+              Inhalte übernehmen wir daher keine Gewähr; verantwortlich ist
+              stets die jeweilige Anbieterin oder der jeweilige Betreiber der
+              verlinkten Seite. Bei Bekanntwerden von Rechtsverletzungen werden
               entsprechende Links umgehend entfernt.
             </p>
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-ink dark:text-white">Urheberrecht</h2>
+            <h2 className="text-lg font-semibold text-ink dark:text-white">
+              Urheberrecht
+            </h2>
             <p className="mt-3">
-              Die durch die Seitenbetreiberin erstellten Inhalte und Werke auf dieser Website
-              unterliegen dem Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und
-              jede Art der Verwertung ausserhalb der Grenzen des Urheberrechts bedürfen der
-              schriftlichen Zustimmung der {siteConfig.company.legalName}.
+              Die durch die Seitenbetreiberin erstellten Inhalte und Werke auf
+              dieser Website unterliegen dem Urheberrecht. Die Vervielfältigung,
+              Bearbeitung, Verbreitung und jede Art der Verwertung ausserhalb
+              der Grenzen des Urheberrechts bedürfen der schriftlichen
+              Zustimmung der {siteConfig.company.legalName}.
             </p>
           </div>
         </div>

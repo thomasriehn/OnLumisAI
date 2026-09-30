@@ -9,8 +9,16 @@ export const companySizeOptions = [
 
 export const contactFormSchema = z.object({
   name: z.string().trim().min(2, "Bitte geben Sie Ihren Namen an.").max(120),
-  company: z.string().trim().min(2, "Bitte geben Sie Ihr Unternehmen an.").max(160),
-  email: z.string().trim().email("Bitte geben Sie eine gültige E-Mail-Adresse an.").max(200),
+  company: z
+    .string()
+    .trim()
+    .min(2, "Bitte geben Sie Ihr Unternehmen an.")
+    .max(160),
+  email: z
+    .string()
+    .trim()
+    .email("Bitte geben Sie eine gültige E-Mail-Adresse an.")
+    .max(200),
   phone: z.string().trim().max(40).optional().or(z.literal("")),
   companySize: z
     .enum(["1-9", "10-49", "50-249", "250+"])

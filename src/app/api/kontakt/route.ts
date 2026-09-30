@@ -6,12 +6,16 @@ import { isRateLimited } from "@/lib/rateLimit";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
 
   if (isRateLimited(ip)) {
     return NextResponse.json(
-      { ok: false, message: "Zu viele Anfragen. Bitte versuchen Sie es später erneut." },
-      { status: 429 }
+      {
+        ok: false,
+        message: "Zu viele Anfragen. Bitte versuchen Sie es später erneut.",
+      },
+      { status: 429 },
     );
   }
 
@@ -21,7 +25,7 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { ok: false, message: "Ungültige Anfrage." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -29,8 +33,11 @@ export async function POST(request: NextRequest) {
   if (!parsed.success) {
     const firstIssue = parsed.error.issues[0];
     return NextResponse.json(
-      { ok: false, message: firstIssue?.message || "Bitte überprüfen Sie Ihre Eingaben." },
-      { status: 400 }
+      {
+        ok: false,
+        message: firstIssue?.message || "Bitte überprüfen Sie Ihre Eingaben.",
+      },
+      { status: 400 },
     );
   }
 
@@ -49,7 +56,7 @@ export async function POST(request: NextRequest) {
         message:
           "Ihre Nachricht konnte nicht versendet werden. Bitte versuchen Sie es später erneut oder schreiben Sie uns direkt per E-Mail.",
       },
-      { status: 502 }
+      { status: 502 },
     );
   }
 

@@ -36,7 +36,10 @@ export default function KontaktPage() {
             </h2>
             <ul className="mt-5 space-y-3">
               {points.map((point) => (
-                <li key={point} className="flex items-start gap-3 text-sm text-muted">
+                <li
+                  key={point}
+                  className="flex items-start gap-3 text-sm text-muted"
+                >
                   <IconCheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-accent-strong" />
                   {point}
                 </li>
