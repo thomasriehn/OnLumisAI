@@ -1,4 +1,6 @@
-# OnLumis
+# OnLumisAI
+
+Die neue Website enthält ein passwortgeschütztes Demo-Studio mit 27 Videos und drei Playbooks. Betrieb, Passwortwechsel, Medienimport und Rückkehr zur vorherigen Version sind in [DEPLOYMENT.md](DEPLOYMENT.md) beschrieben.
 
 Marketing-Website für **OnLumis** – die lokale, DSGVO-konforme
 Unternehmens-KI der [JULITH GmbH](https://julith.gmbh). Produktiv unter

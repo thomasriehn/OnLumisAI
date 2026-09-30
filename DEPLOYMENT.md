@@ -5,7 +5,7 @@
 Die Website läuft als Next.js-Standalone-Dienst auf dem vorhandenen Webserver.
 
 - Dienst: `onlumis.service`, Port 3000 hinter dem vorhandenen HTTPS-Proxy
-- Release: `/home/claude/onlumis-site/releases/20260930-redesign`
+- Release: `/home/claude/onlumis-site/releases/20260930-redesign-final`
 - Laufzeitkonfiguration: `/home/claude/onlumis-site/shared/.env` (0600)
 - Geschützte Videos und PDFs: `/home/claude/onlumis-site/shared/demo`
 - Öffentliche Medien: `/home/claude/onlumis-site/shared/media`

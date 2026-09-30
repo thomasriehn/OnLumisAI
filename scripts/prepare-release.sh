@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-release=/home/claude/onlumis-site/releases/20260930-redesign
+release=/home/claude/onlumis-site/releases/20260930-redesign-final
 shared=/home/claude/onlumis-site/shared
 cd "$release"
 test -f .next/standalone/server.js

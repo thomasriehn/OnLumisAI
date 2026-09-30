@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-release=/home/claude/onlumis-site/releases/20260930-redesign
+release=/home/claude/onlumis-site/releases/20260930-redesign-final
 backup=/home/claude/onlumis-site/backups/onlumis.service.before-redesign
 # Run only after the preview and direct-file access checks have passed.
 curl --fail --silent --max-time 15 http://127.0.0.1:3100/ > /dev/null
