@@ -116,6 +116,10 @@ const env = Object.fromEntries(
     await page.waitForLoadState("networkidle");
     assert.equal(await page.locator(".library-grid article").count(), 27);
     checks.push("Login and 27 protected videos");
+    await page.reload({ waitUntil: "networkidle" });
+    assert.equal(await page.locator("h1").innerText(), "Wissen in Aktion.");
+    assert.equal(await page.locator(".library-grid article").count(), 27);
+    checks.push("Authenticated library survives a full page reload");
     await page.getByRole("button", { name: "V3", exact: true }).click();
     assert.equal(await page.locator(".library-grid article").count(), 11);
     await page.getByRole("searchbox").fill("Preis und Lager");

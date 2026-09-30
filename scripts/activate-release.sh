@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
-release=${RELEASE_DIR:-/home/claude/onlumis-site/releases/20260930-redesign-final}
+release=${RELEASE_DIR:?Set RELEASE_DIR to the candidate release}
 backup=/home/claude/onlumis-site/backups/onlumis.service.before-$(basename "$release")
-# Run only after the preview and direct-file access checks have passed.
+cd "$release"
+# Exercise authenticated rendering in the real standalone preview before switching traffic.
 curl --fail --silent --max-time 15 http://127.0.0.1:3100/ > /dev/null
+TEST_ENV_FILE=/home/claude/onlumis-site/shared/.env TEST_BASE_URL=http://127.0.0.1:3100 node tests/access-check.mjs
 if ! test -f "$backup"; then sudo cp /etc/systemd/system/onlumis.service "$backup"; fi
 sudo tee /etc/systemd/system/onlumis.service > /dev/null <<UNIT
 [Unit]
@@ -33,9 +35,12 @@ sudo systemctl daemon-reload
 sudo systemctl restart onlumis
 for attempt in {1..20}; do
  if curl --fail --silent --max-time 3 http://127.0.0.1:3000/ -o /home/claude/onlumis-site/backups/activation-health.html && grep -q 'Ihre Firma weiß viel' /home/claude/onlumis-site/backups/activation-health.html; then
-  echo 'New website is active and its homepage passed the health check.'
-  sudo systemctl stop onlumis-preview
-  exit 0
+  if TEST_ENV_FILE=/home/claude/onlumis-site/shared/.env TEST_BASE_URL=http://127.0.0.1:3000 node tests/access-check.mjs; then
+   echo 'New website is active; authenticated library, media and OG checks passed.'
+   sudo systemctl stop onlumis-preview
+   exit 0
+  fi
+  break
  fi
  sleep 1
 done

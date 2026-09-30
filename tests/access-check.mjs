@@ -11,12 +11,18 @@ const items = JSON.parse(readFileSync("src/data/demo-catalogue.json", "utf8"));
 const file = "/demo/dateien/" + items[0].file;
 const checks = [];
 const get = (url, headers = {}, method = "GET") =>
-  fetch(base + url, { method, headers, redirect: "manual" });
+  fetch(base + url, {
+    method,
+    headers,
+    redirect: "manual",
+    signal: AbortSignal.timeout(15000),
+  });
 const login = (password, originHeader = origin) =>
   fetch(base + "/api/demo/login", {
     method: "POST",
     headers: { Origin: originHeader, "Content-Type": "application/json" },
     body: JSON.stringify({ password }),
+    signal: AbortSignal.timeout(15000),
   });
 for (const p of [
   file,
@@ -38,11 +44,35 @@ assert.equal((await login("wrong")).status, 401);
 const r = await login(env.DEMO_PASSWORD);
 assert.equal(r.status, 200);
 const setCookie = r.headers.get("set-cookie");
-assert.match(setCookie, /HttpOnly/i);
-assert.match(setCookie, /SameSite=strict/i);
-if (origin.startsWith("https:")) assert.match(setCookie, /Secure/i);
+assert(/HttpOnly/i.test(setCookie), "Session cookie must be HttpOnly");
+assert(
+  /SameSite=strict/i.test(setCookie),
+  "Session cookie must be SameSite=strict",
+);
+if (origin.startsWith("https:"))
+  assert(/Secure/i.test(setCookie), "HTTPS session cookie must be Secure");
 const cookie = setCookie.split(";")[0];
 checks.push("Same-origin login, password validation and protected cookie");
+// A streamed Next.js response can be HTTP 200 even if server rendering fails.
+// Verify the authenticated HTML, not only the status or the separate file API.
+const library = await get("/demo/bibliothek", { Cookie: cookie });
+assert.equal(library.status, 200);
+const libraryHtml = await library.text();
+assert(libraryHtml.includes("Wissen in Aktion."), "Library heading missing");
+assert(libraryHtml.includes('class="library-grid"'), "Library grid missing");
+assert.equal((libraryHtml.match(/<article[\s>]/g) || []).length, items.length);
+assert(
+  !libraryHtml.includes("This page couldn’t load"),
+  "Library server error",
+);
+assert.equal((await get("/demo", { Cookie: cookie })).status, 307);
+checks.push("Authenticated library renders its heading and all video cards");
+const og = await get("/opengraph-image");
+assert.equal(og.status, 200);
+assert.match(og.headers.get("content-type"), /^image\/png/);
+const ogBytes = Buffer.from(await og.arrayBuffer());
+assert.equal(ogBytes.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+checks.push("Open Graph image is a valid PNG alongside authenticated metadata");
 const full = await get(file, { Cookie: cookie }, "HEAD");
 assert.equal(full.status, 200);
 const size = Number(full.headers.get("content-length"));

@@ -2,20 +2,20 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-// Retain the image's existing body typeface; use the website's exact logo weights.
-const [bodyFont, logoStrong, logoLight] = await Promise.all([
-  readFile(
-    join(
-      process.cwd(),
-      "node_modules/next/dist/compiled/@vercel/og/Geist-Regular.ttf",
-    ),
-  ),
-  readFile(join(process.cwd(), "src/assets/fonts/OnLumisLogoStrong.ttf")),
-  readFile(join(process.cwd(), "src/assets/fonts/OnLumisLogoLight.ttf")),
-]);
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export default function OpengraphImage() {
+export default async function OpengraphImage() {
+  // Page metadata imports this module too: only read fonts when rendering the image.
+  const [bodyFont, logoStrong, logoLight] = await Promise.all([
+    readFile(
+      join(
+        process.cwd(),
+        "node_modules/next/dist/compiled/@vercel/og/Geist-Regular.ttf",
+      ),
+    ),
+    readFile(join(process.cwd(), "src/assets/fonts/OnLumisLogoStrong.ttf")),
+    readFile(join(process.cwd(), "src/assets/fonts/OnLumisLogoLight.ttf")),
+  ]);
   return new ImageResponse(
     <div
       style={{

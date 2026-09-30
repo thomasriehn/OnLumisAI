@@ -17,6 +17,10 @@ const securityHeaders = [
 ];
 const nextConfig: NextConfig = {
   output: "standalone",
+  // These OG assets must also exist in the standalone deployment, not just at build time.
+  outputFileTracingIncludes: {
+    "/*": ["./src/assets/fonts/*.ttf", "./src/assets/fonts/OFL-Manrope.txt"],
+  },
   outputFileTracingExcludes: {
     "*": ["./private/**/*", "./qa/**/*", "./deploy-artifacts/**/*"],
   },

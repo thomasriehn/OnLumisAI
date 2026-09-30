@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
-release=${RELEASE_DIR:-/home/claude/onlumis-site/releases/20260930-redesign-final}
+release=${RELEASE_DIR:?Set RELEASE_DIR to the candidate release}
 shared=/home/claude/onlumis-site/shared
 cd "$release"
 test -f .next/standalone/server.js
+for font in OnLumisLogoStrong.ttf OnLumisLogoLight.ttf; do
+ test -s ".next/standalone/src/assets/fonts/$font" || { echo "Standalone font missing: $font" >&2; exit 1; }
+done
+test -s .next/standalone/node_modules/next/dist/compiled/@vercel/og/Geist-Regular.ttf
 mkdir -p .next/standalone/.next/static
 cp -a .next/static/. .next/standalone/.next/static/
 cp -a public .next/standalone/

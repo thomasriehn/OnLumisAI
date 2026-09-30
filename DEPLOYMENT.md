@@ -5,7 +5,7 @@
 Die Website läuft als Next.js-Standalone-Dienst auf dem vorhandenen Webserver.
 
 - Dienst: `onlumis.service`, Port 3000 hinter dem vorhandenen HTTPS-Proxy
-- Release: `/home/claude/onlumis-site/releases/20260930-og-contact`
+- Release: `/home/claude/onlumis-site/releases/20260930-demo-fix`
 - Laufzeitkonfiguration: `/home/claude/onlumis-site/shared/.env` (0600)
 - Geschützte Videos und PDFs: `/home/claude/onlumis-site/shared/demo`
 - Öffentliche Medien: `/home/claude/onlumis-site/shared/media`
@@ -43,9 +43,10 @@ Die Tests benötigen die vorbereiteten Medien. `python3 scripts/import-demo.py /
 
 1. Separates Release-Verzeichnis anlegen und Quellcode übertragen, ohne lokale `.env`, `.git`, `node_modules` oder `.next`.
 2. Dort `npm ci && npm run build` ausführen. Der Build verwendet Webpack.
-3. `.next/static` nach `.next/standalone/.next/static` und `public` nach `.next/standalone/public` kopieren. Das öffentliche Erklärvideo ergänzen. Private Medien bleiben ausschließlich im konfigurierten `DEMO_ASSET_DIR`.
-4. Mit eigener Portnummer zunächst lokal auf dem Server prüfen. Dabei dieselbe Runtime-Konfiguration verwenden; für HTTP-Tests kann ein Testclient den Cookie explizit mitsenden. Die Browseranmeldung erfolgt ausschließlich über HTTPS.
-5. Den Dienst auf das geprüfte Release umstellen, neu starten und die öffentliche Seite einschließlich direkter geschützter Dateien überprüfen.
+3. `RELEASE_DIR=/absoluter/Pfad scripts/prepare-release.sh` prüft die im Standalone-Paket enthaltenen OG-Schriften, ergänzt statische Dateien und öffentliche Medien und startet eine Vorschau auf Port 3100. Private Medien bleiben ausschließlich im konfigurierten `DEMO_ASSET_DIR`. Die Logo-Schriften werden durch `outputFileTracingIncludes` ausdrücklich mitgeliefert; ihr Lesen erfolgt erst beim Erzeugen des OG-Bildes, nicht beim Import der Seitenmetadaten.
+4. Die Vorschau aus ihrem tatsächlichen `.next/standalone`-Verzeichnis mit derselben Runtime-Konfiguration prüfen. `next start` im Quellverzeichnis genügt nicht als Paketprüfung. Für HTTP-Tests kann ein Testclient den Cookie explizit mitsenden; die Browseranmeldung erfolgt ausschließlich über HTTPS.
+5. `RELEASE_DIR=/absoluter/Pfad scripts/activate-release.sh` verlangt vor der Umstellung erfolgreiche Zugriffsprüfungen einschließlich Anmeldung, gerenderter Bibliothek mit allen Videokarten, geschützten Dateien und OG-Bild. Die Prüfung wird nach dem Neustart wiederholt; bei einem Fehler wird der vorherige Dienst wiederhergestellt. Ein HTTP-200-Status allein genügt nicht, da auch eine fehlerhafte gestreamte Next.js-Seite diesen Status liefern kann.
+6. Anschließend die Browserprüfung über die öffentliche HTTPS-Adresse ausführen, einschließlich Anmeldung, Videowiedergabe, PDF und Abmeldung.
 
 ## Rückkehr zur früheren Website
 
