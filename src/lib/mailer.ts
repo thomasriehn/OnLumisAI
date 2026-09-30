@@ -31,7 +31,8 @@ function escapeHtml(value: string) {
 }
 
 export async function sendContactMail(data: ContactFormValues) {
-  const mailFrom = process.env.MAIL_FROM || "OnLumis Website <no-reply@onlumis.ai>";
+  const mailFrom =
+    process.env.MAIL_FROM || "OnLumis Website <no-reply@onlumis.ai>";
   const mailTo = process.env.MAIL_TO || "info@onlumis.ai";
 
   const transport = getTransport();

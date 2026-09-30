@@ -39,7 +39,10 @@ export function ContactForm() {
 
       if (!response.ok || !data.ok) {
         setStatus("error");
-        setErrorMessage(data.message || "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+        setErrorMessage(
+          data.message ||
+            "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+        );
         return;
       }
 
@@ -47,7 +50,9 @@ export function ContactForm() {
       form.reset();
     } catch {
       setStatus("error");
-      setErrorMessage("Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+      setErrorMessage(
+        "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+      );
     }
   }
 
@@ -61,8 +66,8 @@ export function ContactForm() {
           Vielen Dank für Ihre Nachricht!
         </h3>
         <p className="mt-2 text-sm text-muted">
-          Wir haben Ihre Anfrage erhalten und melden uns in der Regel innerhalb von 1–2
-          Werktagen bei Ihnen.
+          Wir haben Ihre Anfrage erhalten und melden uns in der Regel innerhalb
+          von 1–2 Werktagen bei Ihnen.
         </p>
       </div>
     );
@@ -72,7 +77,10 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="name" className="text-sm font-medium text-ink dark:text-white">
+          <label
+            htmlFor="name"
+            className="text-sm font-medium text-ink dark:text-white"
+          >
             Name *
           </label>
           <input
@@ -86,7 +94,10 @@ export function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="company" className="text-sm font-medium text-ink dark:text-white">
+          <label
+            htmlFor="company"
+            className="text-sm font-medium text-ink dark:text-white"
+          >
             Unternehmen *
           </label>
           <input
@@ -103,7 +114,10 @@ export function ContactForm() {
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="email" className="text-sm font-medium text-ink dark:text-white">
+          <label
+            htmlFor="email"
+            className="text-sm font-medium text-ink dark:text-white"
+          >
             E-Mail-Adresse *
           </label>
           <input
@@ -116,7 +130,10 @@ export function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="phone" className="text-sm font-medium text-ink dark:text-white">
+          <label
+            htmlFor="phone"
+            className="text-sm font-medium text-ink dark:text-white"
+          >
             Telefon (optional)
           </label>
           <input
@@ -130,7 +147,10 @@ export function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="companySize" className="text-sm font-medium text-ink dark:text-white">
+        <label
+          htmlFor="companySize"
+          className="text-sm font-medium text-ink dark:text-white"
+        >
           Unternehmensgröße (optional)
         </label>
         <select
@@ -149,7 +169,10 @@ export function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="message" className="text-sm font-medium text-ink dark:text-white">
+        <label
+          htmlFor="message"
+          className="text-sm font-medium text-ink dark:text-white"
+        >
           Ihre Nachricht *
         </label>
         <textarea
@@ -166,7 +189,13 @@ export function ContactForm() {
       {/* Honeypot: hidden from real users, catches simple bots. */}
       <div className="absolute left-[-9999px] top-auto" aria-hidden="true">
         <label htmlFor="website">Website</label>
-        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
 
       <div className="flex items-start gap-3">
@@ -178,10 +207,13 @@ export function ContactForm() {
           className="mt-1 h-4 w-4 shrink-0 rounded border-border text-accent-strong focus:ring-accent-strong"
         />
         <label htmlFor="consent" className="text-sm text-muted">
-          Ich stimme zu, dass meine Angaben aus dem Kontaktformular zur Bearbeitung meiner
-          Anfrage gespeichert und verarbeitet werden. Weitere Informationen finden Sie in
-          unserer{" "}
-          <Link href="/datenschutz" className="text-accent-strong underline underline-offset-2">
+          Ich stimme zu, dass meine Angaben aus dem Kontaktformular zur
+          Bearbeitung meiner Anfrage gespeichert und verarbeitet werden. Weitere
+          Informationen finden Sie in unserer{" "}
+          <Link
+            href="/datenschutz"
+            className="text-accent-strong underline underline-offset-2"
+          >
             Datenschutzerklärung
           </Link>
           . *
@@ -189,7 +221,10 @@ export function ContactForm() {
       </div>
 
       {status === "error" && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">
+        <p
+          role="alert"
+          className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300"
+        >
           {errorMessage}
         </p>
       )}
@@ -197,7 +232,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent-strong px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="btn btn-dark w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {status === "loading" ? "Wird gesendet…" : "Nachricht absenden"}
       </button>

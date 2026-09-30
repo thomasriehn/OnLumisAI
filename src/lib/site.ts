@@ -1,10 +1,10 @@
 export const siteConfig = {
-  name: "OnLumis",
+  name: "OnLumisAI",
   tagline: "Ihre Firma. Ihre KI.",
   domain: "onlumis.ai",
   url: "https://onlumis.ai",
   description:
-    "OnLumis ist die lokale KI-Lösung der JULITH GmbH für kleine und mittlere Unternehmen: Ihr Unternehmenswissen wird in ein On-Premise-KI-System eingebettet – DSGVO-konform, ohne Cloud-Zwang und vollständig unter eigener Kontrolle.",
+    "OnLumis ist die lokale KI-Lösung der JULITH GmbH für kleine und mittlere Unternehmen: Ihr Unternehmenswissen wird in ein On-Premise-KI-System eingebettet – auf Ihrer Infrastruktur, mit nachvollziehbaren Quellen und kontrolliertem Zugriff.",
   locale: "de_DE",
   company: {
     legalName: "JULITH GmbH",

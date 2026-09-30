@@ -1,22 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Sora } from "next/font/google";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/manrope";
 import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { siteConfig } from "@/lib/site";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const sora = Sora({
-  variable: "--font-sora",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -33,9 +22,10 @@ export const metadata: Metadata = {
     "Unternehmens-KI ohne Cloud",
     "eigene KI Wissensdatenbank",
     "KI Assistent Firma",
-    "Digitalbonus Hessen KI",
   ],
-  authors: [{ name: siteConfig.company.legalName, url: siteConfig.company.url }],
+  authors: [
+    { name: siteConfig.company.legalName, url: siteConfig.company.url },
+  ],
   creator: siteConfig.company.legalName,
   publisher: siteConfig.company.legalName,
   alternates: {
@@ -111,15 +101,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="de"
-      className={`${inter.variable} ${sora.variable} h-full antialiased`}
-    >
+    <html lang="de" className="h-full antialiased">
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <Script
           id="ld-organization"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
         />
         <Script
           id="ld-software"
@@ -128,7 +117,7 @@ export default function RootLayout({
         />
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-accent-strong focus:px-4 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-accent-strong focus:px-4 focus:py-2 focus:text-[#05251b]"
         >
           Zum Inhalt springen
         </a>

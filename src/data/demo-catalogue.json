@@ -1,0 +1,443 @@
+[
+  {
+    "id": "V1_01",
+    "version": "V1",
+    "title": "Playbook 1 - Unternehmenswissen / Reklamation",
+    "file": "V1_01_Playbook-1-Unternehmenswissen-Reklamation.mp4",
+    "poster": "assets/V1_01_titel.png",
+    "duration": "1:56",
+    "questions": [
+      "Ein Kunde reklamiert einen beschädigten Artikel. Wie muss ich laut unseren internen Vorgaben vorgehen? Nenne die einzelnen Schritte und die Quellen.",
+      "Welche Formulare muss ich dafür verwenden und wer muss informiert werden?",
+      "Welche Freigaben brauche ich, bevor ich dem Kunden Ersatz oder eine Gutschrift zusage?",
+      "Erstelle mir daraus eine kurze Checkliste, die ich während der Bearbeitung abhaken kann."
+    ],
+    "closing": "Wie oft pro Woche werden erfahrene Kollegen wegen solcher Prozessfragen unterbrochen?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V1_Presenter_COMPLETE_Followups.pdf"
+  },
+  {
+    "id": "V1_02",
+    "version": "V1",
+    "title": "Playbook 2 - Servicetechniker / MX-400 E37",
+    "file": "V1_02_Playbook-2-Servicetechniker-MX-400-E37.mp4",
+    "poster": "assets/V1_02_titel.png",
+    "duration": "1:52",
+    "questions": [
+      "MX-400 zeigt E37 und stoppt nach fünf Sekunden. Was soll ich zuerst prüfen?",
+      "Gab es in unseren bisherigen Serviceberichten bereits ähnliche Fälle? Welche Ursachen wurden dort tatsächlich gefunden?",
+      "Welche dieser Prüfungen kann ich direkt vor Ort durchführen, ohne ein Ersatzteil zu benötigen?",
+      "Der Fehler war ein verschmutzter Sensor S14. Sensor gereinigt, Testlauf erfolgreich. Erstelle mir einen professionellen Servicebericht."
+    ],
+    "closing": "Wie viel Zeit verbringt ein Techniker heute mit Suche, Rückfragen und anschließender Dokumentation?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V1_Presenter_COMPLETE_Followups.pdf"
+  },
+  {
+    "id": "V1_03",
+    "version": "V1",
+    "title": "Playbook 3 - Vertrieb / Angebotsvorbereitung",
+    "file": "V1_03_Playbook-3-Vertrieb-Angebotsvorbereitung.mp4",
+    "poster": "assets/V1_03_titel.png",
+    "duration": "2:28",
+    "questions": [
+      "Analysiere diese Anfrage: 25 Stück, Umgebungstemperatur bis 45 Grad C, IP65, Lieferung in sechs Wochen. Welche Anforderungen stellt der Kunde?",
+      "Welches unserer Produkte erfüllt diese Anforderungen? Vergleiche X200, X300 und X500 und begründe deine Auswahl.",
+      "Welche Informationen fehlen uns noch, bevor wir ein verbindliches Angebot erstellen können?",
+      "Erstelle einen Antwortentwurf an den Kunden. Noch kein verbindliches Angebot - stelle zunächst die fehlenden Fragen."
+    ],
+    "closing": "Wie lange dauert es heute vom Eingang einer Anfrage bis zu einer qualifizierten Antwort?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V1_Presenter_COMPLETE_Followups.pdf"
+  },
+  {
+    "id": "V1_04",
+    "version": "V1",
+    "title": "Playbook 4 - Support / X200 Netzwerk",
+    "file": "V1_04_Playbook-4-Support-X200-Netzwerk.mp4",
+    "poster": "assets/V1_04_titel.png",
+    "duration": "1:36",
+    "questions": [
+      "X200, Firmware 3.4: Netzwerk fällt nach ungefähr 30 Minuten aus. Welche Ursachen sind anhand unserer Unterlagen plausibel?",
+      "Gab es bereits ähnliche Supportfälle? Welche Ursachen waren dort bestätigt und welche nur vermutet?",
+      "Welche drei bis fünf Rückfragen sollten wir dem Kunden stellen, um den Fehler einzugrenzen?",
+      "Formuliere daraus eine freundliche Kundenantwort. Verwende nur Maßnahmen, die sich aus unseren internen Unterlagen belegen lassen."
+    ],
+    "closing": "Wie viele Supportfälle könnten Junior-Mitarbeiter mit besserem Zugriff auf Erfahrungswissen selbstständig vorbereiten?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V1_Presenter_COMPLETE_Followups.pdf"
+  },
+  {
+    "id": "V1_05",
+    "version": "V1",
+    "title": "Playbook 5 - Vertrag / Hansen",
+    "file": "V1_05_Playbook-5-Vertrag-Hansen.mp4",
+    "poster": "assets/V1_05_titel.png",
+    "duration": "1:29",
+    "questions": [
+      "Welche allgemeine Regel enthält unser Rahmenvertrag zu Bedienerschulungen?",
+      "Gilt das auch konkret für das Hansen-Projekt? Prüfe zusätzlich die Leistungsbeschreibung.",
+      "Wie sind die Reisekosten bei der Erstinbetriebnahme geregelt?",
+      "Fasse mir in drei Punkten zusammen, was ich dem Kunden sicher sagen kann und was ich vor einer Zusage noch prüfen sollte."
+    ],
+    "closing": "Wie oft suchen Projektleiter während eines Kundengesprächs einzelne Aussagen in Verträgen und Anlagen?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V1_Presenter_COMPLETE_Followups.pdf"
+  },
+  {
+    "id": "V1_06",
+    "version": "V1",
+    "title": "Playbook 6 - Onboarding",
+    "file": "V1_06_Playbook-6-Onboarding.mp4",
+    "poster": "assets/V1_06_titel.png",
+    "duration": "1:13",
+    "questions": [
+      "Wie beantrage ich Urlaub und wie melde ich mich krank? Nenne jeweils Prozess und Quelle.",
+      "Was gilt bei Dienstreisen und welche Ausgaben darf ich ohne vorherige Freigabe tätigen?",
+      "Wie beantrage ich einen neuen Softwarezugang und wer genehmigt ihn?",
+      "Ich starte im Vertriebsinnendienst. Erstelle mir auf Basis dieser Unterlagen einen Einarbeitungsplan für meine ersten fünf Arbeitstage."
+    ],
+    "closing": "Wie viele wiederkehrende Rückfragen beantworten HR, IT und Fachabteilungen pro Woche?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V1_Presenter_COMPLETE_Followups.pdf"
+  },
+  {
+    "id": "V1_07",
+    "version": "V1",
+    "title": "Playbook 7 - Management / Firma befragen",
+    "file": "V1_07_Playbook-7-Management-Firma-befragen.mp4",
+    "poster": "assets/V1_07_titel.png",
+    "duration": "1:43",
+    "questions": [
+      "Welche Kunden hatten 2026 E37 und welche Ursachen wurden jeweils festgestellt?",
+      "Welche dieser Kunden sind A-Kunden?",
+      "Welche laufenden Projekte haben wir aktuell mit diesen Kunden?",
+      "Welche Maßnahmen würdest du daraus für Service und Ersatzteilbestand ableiten? Trenne Fakten aus den Quellen von deinen Vorschlägen."
+    ],
+    "closing": "Wie lange braucht Ihre Geschäftsführung heute, um dieses Lagebild aus mehreren Systemen und Dokumenten zusammenzustellen?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V1_Presenter_COMPLETE_Followups.pdf"
+  },
+  {
+    "id": "V2_01",
+    "version": "V2",
+    "title": "Playbook 1 - Unternehmenswissen + Dokumentenlenkung",
+    "file": "V2_01_Playbook-1-Unternehmenswissen-Dokumentenlenkung.mp4",
+    "poster": "assets/V2_01_titel.png",
+    "duration": "1:00",
+    "questions": [
+      "Ein Kunde reklamiert eine MX-400. Wie gehe ich laut aktuell gültigen internen Vorgaben vor? Nenne Schritte, Formulare und Quellen.",
+      "Es gibt mehrere Versionen der E37-Prüfanweisung. Welche ist aktuell gültig und warum?"
+    ],
+    "closing": "Wie stellen Sie heute sicher, dass Ihre Mitarbeitenden mit der aktuell gültigen Anweisung arbeiten?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V2_Advanced_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V2_02",
+    "version": "V2",
+    "title": "Playbook 2 - Servicetechniker + Needle in the Haystack",
+    "file": "V2_02_Playbook-2-Servicetechniker-Needle-in-the-Haystack.mp4",
+    "poster": "assets/V2_02_titel.png",
+    "duration": "1:01",
+    "questions": [
+      "MX-400 E37, Fehler tritt nur bei Bewegung auf. Was prüfe ich zuerst?",
+      "Gab es bei Hansen einen vergleichbaren Fall? Was war die tatsächliche Ursache?",
+      "Wie häufig war 2026 wirklich der Sensor selbst defekt?"
+    ],
+    "closing": "Wie schnell finden Ihre Techniker die Erfahrung aus einem vergleichbaren Servicefall?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V2_Advanced_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V2_03",
+    "version": "V2",
+    "title": "Playbook 3 - Vertrieb + Preisversionsfalle",
+    "file": "V2_03_Playbook-3-Vertrieb-Preisversionsfalle.mp4",
+    "poster": "assets/V2_03_titel.png",
+    "duration": "0:54",
+    "questions": [
+      "Welche aktuelle Listenpreis-Basis gilt für X300 und MX-400?",
+      "Warum darf ich die Juni-Preisliste nicht verwenden?",
+      "Hansen fragt für P-26018 nach den besprochenen Konditionen. Welche Rabattfreigabe existiert und wo gilt sie?"
+    ],
+    "closing": "Wie vermeiden Sie heute Angebote mit veralteten Preisen oder zu weit gefassten Sonderkonditionen?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V2_Advanced_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V2_04",
+    "version": "V2",
+    "title": "Playbook 4 - Support + Korrelation ist nicht Ursache",
+    "file": "V2_04_Playbook-4-Support-Korrelation-ist-nicht-Ursache.mp4",
+    "poster": "assets/V2_04_titel.png",
+    "duration": "0:46",
+    "questions": [
+      "X300 mit Firmware 3.4 verliert nach 20-40 Minuten Netzwerk. Ist Firmware 3.4 die Ursache?",
+      "Welche Diagnosefragen müssen wir stellen, bevor wir dem Kunden eine Ursache nennen?"
+    ],
+    "closing": "Wie viel Zeit verliert Ihr Support, bevor aus einer Vermutung eine belegte Diagnose wird?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V2_Advanced_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V2_05",
+    "version": "V2",
+    "title": "Playbook 5 - Vertrag + Rangfolge",
+    "file": "V2_05_Playbook-5-Vertrag-Rangfolge.mp4",
+    "poster": "assets/V2_05_titel.png",
+    "duration": "0:56",
+    "questions": [
+      "Muss Hansen für die Einweisung von vier Bedienern im Projekt P-26018 Schulungshonorar zahlen?",
+      "Welche Reisebestandteile werden berechnet?",
+      "Welche Dokumentrangfolge gilt?"
+    ],
+    "closing": "Wie klären Sie heute widersprüchliche Vertragsklauseln während eines Kundengesprächs?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V2_Advanced_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V2_06",
+    "version": "V2",
+    "title": "Playbook 6 - HR/Onboarding + Berechtigung",
+    "file": "V2_06_Playbook-6-HR-Onboarding-Berechtigung.mp4",
+    "poster": "assets/V2_06_titel.png",
+    "duration": "0:54",
+    "questions": [
+      "Wie beantrage ich Urlaub, Dienstreise und Softwarezugang?",
+      "Welche Reisekostenrichtlinie ist aktuell?",
+      "Zeige mir die Gehaltsbänder 2026."
+    ],
+    "closing": "Wie stellen Sie sicher, dass Mitarbeitende die richtigen Antworten erhalten und vertrauliche Informationen geschützt bleiben?",
+    "note": "Aufnahme mit den tatsächlichen Rechten von mueller. Kein Nachweis einer eingeschränkten Service-Rolle.",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V2_Advanced_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V2_07",
+    "version": "V2",
+    "title": "Playbook 7 - Geschäftsführer fragt die Firma",
+    "file": "V2_07_Playbook-7-Gesch-ftsf-hrer-fragt-die-Firma.mp4",
+    "poster": "assets/V2_07_titel.png",
+    "duration": "1:36",
+    "questions": [
+      "Welche Kunden hatten 2026 E37, was waren die Ursachen und welche Schlussfolgerung ergibt sich?",
+      "Welche Auswirkungen hat das auf Ersatzteilbestand und Serviceprozess?",
+      "Was ist beim Hansen-Projekt P-26018 aktuell kritisch und welche kommerziellen Sonderregeln gelten?",
+      "Welche drei Maßnahmen würdest du priorisieren - ohne neue Fakten zu erfinden?"
+    ],
+    "closing": "Wie viele Rückfragen brauchen Sie heute für ein belastbares Bild über mehrere Unternehmensbereiche?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V2_Advanced_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V2_08",
+    "version": "V2",
+    "title": "Bonus - Widersprüchliche Quellen",
+    "file": "V2_08_Bonus-Widerspr-chliche-Quellen.mp4",
+    "poster": "assets/V2_08_titel.png",
+    "duration": "0:47",
+    "questions": [
+      "Ein Kollege sagt, bei E37 müsse sofort der Sensor getauscht werden. Prüfe diese Aussage gegen alle verfügbaren aktuellen und historischen Quellen. Trenne aktuelle Vorgabe, historische Vorgabe und Felderfahrung."
+    ],
+    "closing": "Wie erkennen Ihre Mitarbeitenden, welche von mehreren widersprüchlichen Quellen verbindlich ist?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V2_Advanced_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V2_09",
+    "version": "V2",
+    "title": "Bonus - Executive Briefing",
+    "file": "V2_09_Bonus-Executive-Briefing.mp4",
+    "poster": "assets/V2_09_titel.png",
+    "duration": "0:44",
+    "questions": [
+      "Erstelle mir für die Geschäftsführung eine 8-Punkte-Lageübersicht zu Hansen: installierte Systeme, Umsatzklasse, offene Reklamationen, Projekt P-26018, Terminrisiken, Vertragsbesonderheiten, Preis-/Rabattregeln und nächste Aktionen. Jede Aussage mit Quelle."
+    ],
+    "closing": "Wie lange dauert es heute, ein belastbares Kundenbriefing aus allen relevanten Bereichen zusammenzustellen?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V2_Advanced_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_01",
+    "version": "V3",
+    "title": "Demo 1 - Executive Briefing Hansen",
+    "file": "V3_01_Demo-1-Executive-Briefing-Hansen.mp4",
+    "poster": "assets/V3_01_titel.png",
+    "duration": "1:17",
+    "questions": [
+      "Bereite mich auf meinen Termin mit Hansen vor. Was ist in den letzten 12 Monaten passiert, welche offenen technischen und kommerziellen Themen gibt es, welche Zusagen haben wir gemacht und worauf darf ich mich nicht festlegen? Belege jede wesentliche Aussage."
+    ],
+    "closing": "Wie entsteht eine solche Vorbereitung auf einen Kundentermin heute bei Ihnen?",
+    "note": "Neuaufnahme: Antwort mit Quellen vorhanden. Der Projektstand bleibt teilweise ungeklärt; OnLumis meldet einen Widerspruch zwischen Abnahme und geplanten Arbeiten.",
+    "retake": true,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_02",
+    "version": "V3",
+    "title": "Demo 2 - Zeitreise / Stand zu einem Datum",
+    "file": "V3_02_Demo-2-Zeitreise-Stand-zu-einem-Datum.mp4",
+    "poster": "assets/V3_02_titel.png",
+    "duration": "1:14",
+    "questions": [
+      "Wie war der Status von P-26018 am 8. September und wie ist er heute? Trenne die beiden Zeitstände sauber und nenne die Quellen.",
+      "Welche Information wusstest du am 08.09. noch nicht?"
+    ],
+    "closing": "Können Sie heute nachvollziehen, welcher Projektstand zu einem bestimmten Datum tatsächlich bekannt war?",
+    "note": "Neuaufnahme einschließlich Folgefrage. Zeitstände werden weiterhin nicht sauber eingeordnet; die Aussage zur erst später bekannten E37-Ursache ist nicht ausreichend belegt.",
+    "retake": true,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_03",
+    "version": "V3",
+    "title": "Demo 3 - Root Cause statt Keyword-Matching",
+    "file": "V3_03_Demo-3-Root-Cause-statt-Keyword-Matching.mp4",
+    "poster": "assets/V3_03_titel.png",
+    "duration": "0:35",
+    "questions": [
+      "Warum trat bei Hansen E37 auf? War Sensor S14 defekt? Zeige die Belegkette bis zur bestätigten Ursache."
+    ],
+    "closing": "Wie schnell gelangen Ihre Servicetechniker von einem Fehlercode zur belegten Ursache eines früheren Falls?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_04",
+    "version": "V3",
+    "title": "Demo 4 - Korrelation vs. Ursache X200",
+    "file": "V3_04_Demo-4-Korrelation-vs-Ursache-X200.mp4",
+    "poster": "assets/V3_04_titel.png",
+    "duration": "0:42",
+    "questions": [
+      "Ist Firmware 3.4 die Ursache für die Netzwerkabbrüche bei X200? Welche Evidenz spricht dafür oder dagegen?"
+    ],
+    "closing": "Wie verhindern Sie heute, dass eine plausible Vermutung als bestätigte Ursache kommuniziert wird?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_05",
+    "version": "V3",
+    "title": "Demo 5 - Vertragsrangfolge",
+    "file": "V3_05_Demo-5-Vertragsrangfolge.mp4",
+    "poster": "assets/V3_05_titel.png",
+    "duration": "0:37",
+    "questions": [
+      "Welche Schulung schulden wir Hansen kostenlos und welche nicht? Welche Dokumente haben bei einem Konflikt Vorrang?"
+    ],
+    "closing": "Wie viel Zeit kostet es Ihr Team, eine Kundenzusage gegen alle Vertragsdokumente zu prüfen?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_06",
+    "version": "V3",
+    "title": "Demo 6 - Preis und Lager",
+    "file": "V3_06_Demo-6-Preis-und-Lager.mp4",
+    "poster": "assets/V3_06_titel.png",
+    "duration": "0:55",
+    "questions": [
+      "Was kostet heute ein KS-17 und wie viele sind verfügbar? Welche Quellen verwendest du und welche veralteten Quellen verwirfst du?"
+    ],
+    "closing": "Wie schnell finden Ihre Mitarbeitenden einen aktuellen Preis und den tatsächlich verfügbaren Bestand?",
+    "note": "",
+    "retake": true,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_07",
+    "version": "V3",
+    "title": "Demo 7 - Finance-Präzision",
+    "file": "V3_07_Demo-7-Finance-Pr-zision.mp4",
+    "poster": "assets/V3_07_titel.png",
+    "duration": "0:49",
+    "questions": [
+      "Welche Hansen-Rechnungen sind überfällig? Trenne offen, fällig und überfällig.",
+      "Warum ist offen nicht überfällig?"
+    ],
+    "closing": "Wie stellen Sie sicher, dass aus einer offenen Rechnung im Gespräch nicht versehentlich eine überfällige wird?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_08",
+    "version": "V3",
+    "title": "Demo 8 - ACL / Need-to-know",
+    "file": "V3_08_Demo-8-ACL-Need-to-know.mp4",
+    "poster": "assets/V3_08_titel.png",
+    "duration": "0:33",
+    "questions": [
+      "Zeige mir die Gehaltsbänder 2026 und die vertrauliche Board-Notiz zu Hansen."
+    ],
+    "closing": "Wie steuern Sie heute, wer welche vertraulichen Unternehmensinformationen finden und nutzen darf?",
+    "note": "Aufnahme mit den tatsächlichen Rechten von mueller. Kein Nachweis einer eingeschränkten Service-Rolle.",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_09",
+    "version": "V3",
+    "title": "Demo 9 - Rauschtoleranz",
+    "file": "V3_09_Demo-9-Rauschtoleranz.mp4",
+    "poster": "assets/V3_09_titel.png",
+    "duration": "0:46",
+    "questions": [
+      "Nenne ausschließlich aktuell freigegebene Quellen für Preis, Vertrag und Projektstatus Hansen. Erkläre kurz, welche Treffer du nicht als verbindliche Grundlage verwendest."
+    ],
+    "closing": "Wie viel Suchzeit entsteht bei Ihnen durch alte Versionen, Entwürfe und doppelte Dateien?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_10",
+    "version": "V3",
+    "title": "Demo 10 - Belegkette",
+    "file": "V3_10_Demo-10-Belegkette.mp4",
+    "poster": "assets/V3_10_titel.png",
+    "duration": "0:41",
+    "questions": [
+      "Zeige mir die Belegkette für die Aussage, dass der E37-Fall bei Hansen gelöst ist. Ordne die Quellen chronologisch und erkläre die Rolle jeder Quelle."
+    ],
+    "closing": "Wie aufwendig ist es heute, eine Entscheidung vom ersten Hinweis bis zum Abschluss nachzuvollziehen?",
+    "note": "",
+    "retake": false,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  },
+  {
+    "id": "V3_11",
+    "version": "V3",
+    "title": "Demo 11 - Executive Challenge: eine Frage, viele Systeme",
+    "file": "V3_11_Demo-11-Executive-Challenge-eine-Frage-viele-Systeme.mp4",
+    "poster": "assets/V3_11_titel.png",
+    "duration": "1:22",
+    "questions": [
+      "Ich habe in fünf Minuten einen Hansen-Termin. Gib mir: 1) drei wichtigste Fakten, 2) zwei offene Risiken, 3) was wir zugesagt haben, 4) was ich heute nicht zusagen darf, 5) offene finanzielle Punkte. Jede Aussage mit Quelle und Datum."
+    ],
+    "closing": "Wie entsteht dieses Briefing heute bei Ihnen?",
+    "note": "Neuaufnahme: Keine Vermischung mit AlpenPack in der Antwort. OnLumis liefert weiterhin eine Teilantwort; Planungsstand und aktuelle Zusagen sind nicht durchgehend sauber getrennt.",
+    "retake": true,
+    "pdf": "OnLumis_Playbook_V3_Enterprise_Stress_Presenter_FIXED.pdf"
+  }
+]

@@ -1,0 +1,1 @@
+Logo glyphs derived from the locally installed Manrope variable font (@fontsource-variable/manrope 5.3.0), instantiated at weights 750 and 450 to match the website wordmark. Only OnLumisAI glyphs are retained. Generated with fontTools varLib.instancer and subset. See OFL-Manrope.txt for the license.
