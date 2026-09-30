@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-release=/home/claude/onlumis-site/releases/20260930-redesign-final
-backup=/home/claude/onlumis-site/backups/onlumis.service.before-redesign
+release=${RELEASE_DIR:-/home/claude/onlumis-site/releases/20260930-redesign-final}
+backup=/home/claude/onlumis-site/backups/onlumis.service.before-$(basename "$release")
 # Run only after the preview and direct-file access checks have passed.
 curl --fail --silent --max-time 15 http://127.0.0.1:3100/ > /dev/null
 if ! test -f "$backup"; then sudo cp /etc/systemd/system/onlumis.service "$backup"; fi

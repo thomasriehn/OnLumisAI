@@ -39,7 +39,8 @@ export default function DatenschutzPage() {
               <br />
               E-Mail:{" "}
               <a
-                href={`mailto:${siteConfig.company.legalEmail}`}
+                href="/kontakt"
+                title="Kontaktseite öffnen"
                 className="text-accent-strong underline underline-offset-2"
               >
                 {siteConfig.company.legalEmail}

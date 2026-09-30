@@ -52,10 +52,10 @@ export default function KontaktPage() {
               </h3>
               <p className="mt-2 text-sm text-muted">
                 <a
-                  href={`mailto:${siteConfig.company.contactEmail}`}
+                  href="/kontakt#kontaktformular"
                   className="font-medium text-accent-strong hover:underline"
                 >
-                  {siteConfig.company.contactEmail}
+                  Zum Kontaktformular
                 </a>
               </p>
               <p className="mt-3 text-sm text-muted">
@@ -73,7 +73,10 @@ export default function KontaktPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8 lg:col-span-2">
+          <div
+            id="kontaktformular"
+            className="scroll-mt-28 rounded-2xl border border-border bg-surface p-6 sm:p-8 lg:col-span-2"
+          >
             <ContactForm />
           </div>
         </Container>

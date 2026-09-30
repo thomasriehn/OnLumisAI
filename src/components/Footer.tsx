@@ -13,9 +13,9 @@ export function Footer() {
               <br />
               beginnen hier.
             </p>
-            <a href="mailto:info@onlumis.ai">
-              info@onlumis.ai <Arrow />
-            </a>
+            <Link href="/kontakt">
+              Kontakt aufnehmen <Arrow />
+            </Link>
           </div>
           <div className="footer-links">
             <div>

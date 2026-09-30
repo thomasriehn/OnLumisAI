@@ -51,7 +51,8 @@ export default function ImpressumPage() {
             <p className="mt-3">
               E-Mail:{" "}
               <a
-                href={`mailto:${siteConfig.company.legalEmail}`}
+                href="/kontakt"
+                title="Kontaktseite öffnen"
                 className="text-accent-strong underline underline-offset-2"
               >
                 {siteConfig.company.legalEmail}
